@@ -1,27 +1,21 @@
-package org.example.entity;
+package org.example.dto;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-@Table
 @Data
-@Entity(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
-public class Account {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+public class AccountDTO {
+
     private long id;
 
-    @Column
     private boolean activity;
 
-    @Column
     private short pinCode;
 
-    @Column
     private long bankAccount;
-}
 
+}

@@ -20,7 +20,13 @@ public class UserService {
     public Optional<User> getUserById(long id){
         return userRepository.findById(id);
     }
+
     public void deleteById(long id){
         userRepository.deleteById(id);
+    }
+
+    public void update(User user, long id){
+        userRepository.deleteById(id);
+        save(user);
     }
 }
