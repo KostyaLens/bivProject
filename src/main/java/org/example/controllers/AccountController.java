@@ -41,7 +41,7 @@ public class AccountController{
     }
 
     @PutMapping("/transfer")
-    public void transfer(@RequestParam long fromUserId, @RequestParam long toUserId, @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму")  long amount) throws NotEnoughFundsException {
+    public void transfer(@RequestParam long fromUserId, @RequestParam long toUserId, @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму")  long amount){
         accountService.downBalance(fromUserId, amount);
         accountService.upBalance(toUserId, amount);
     }

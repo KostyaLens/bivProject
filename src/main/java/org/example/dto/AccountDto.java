@@ -16,5 +16,4 @@ public class AccountDto {
     private short pinCode;
 
     private long balance;
-
 }
