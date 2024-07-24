@@ -8,12 +8,10 @@ import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
 import org.example.services.AccountService;
 import org.example.services.UserService;
-import org.example.dto.UserTDO;
+import org.example.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/user")
@@ -29,9 +27,9 @@ public class UserController {
     private final AccountMapper accountMapper;
 
     @PostMapping("/add")
-    public void registrationUser(@RequestBody @Valid UserTDO userTDO){
-        userTDO.setAccountDTO(accountMapper.toDto(accountService.createAccount(new Account())));
-        userService.save(userMapper.toEntity(userTDO));
+    public void registrationUser(@RequestBody @Valid UserDto userDto){
+        userDto.setAccountDto(accountMapper.toDto(accountService.createAccount(new Account())));
+        userService.save(userMapper.toEntity(userDto));
     }
 
     @GetMapping("/{id}")
@@ -52,9 +50,9 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody UserTDO userDTO, @PathVariable long id){
+    public ResponseEntity<?> updateUser(@RequestBody UserDto userDto, @PathVariable long id){
         try {
-            User user = userMapper.updateUserFromDto(userDTO, userService.getUserById(id).orElseThrow());
+            User user = userMapper.updateUserFromDto(userDto, userService.getUserById(id).orElseThrow());
             userService.update(user, id);
             return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
         }catch (Exception ex){

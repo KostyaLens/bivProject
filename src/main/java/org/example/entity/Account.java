@@ -16,7 +16,7 @@ public class Account {
     private long id;
 
     @Column
-    private boolean activity;
+    private boolean isActive;
 
     @Column
     private short pinCode;

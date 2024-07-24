@@ -8,7 +8,11 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
 import org.example.validatros.Password;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.SourceType;
+import org.hibernate.annotations.UpdateTimestamp;
 
+import java.time.Instant;
 import java.time.LocalDate;
 
 @Table
@@ -22,10 +26,12 @@ public class User {
     private long id;
 
     @Column
-    private LocalDate dateOfCreating = LocalDate.now();
+    @CreationTimestamp(source = SourceType.DB)
+    private Instant createdOn;
 
     @Column
-    private LocalDate dateOfChange  = LocalDate.now();
+    @UpdateTimestamp(source = SourceType.DB)
+    private Instant lastUpdatedOn;
 
     @Column
     private String FIO;

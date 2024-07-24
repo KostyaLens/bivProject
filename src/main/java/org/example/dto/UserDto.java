@@ -12,13 +12,13 @@ import java.time.LocalDate;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserTDO {
-
-    private long id;
-
-    private LocalDate dateOfCreating = LocalDate.now();
-
-    private LocalDate dateOfChange = LocalDate.now();
+public class UserDto {
+//
+//    private long id;
+//
+//    private LocalDate dateOfCreating = LocalDate.now();
+//
+//    private LocalDate dateOfChange = LocalDate.now();
 
 //    @NotEmpty(message = "Заполниете поле ФИО")
     private String FIO;
@@ -32,5 +32,5 @@ public class UserTDO {
     @Password
     private String password;
 
-    private AccountDTO accountDTO;
+    private AccountDto accountDto;
 }

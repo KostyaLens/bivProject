@@ -2,14 +2,11 @@ package org.example.controllers;
 
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.AccountDTO;
-import org.example.dto.UserTDO;
 import org.example.exception.NotEnoughFundsException;
 import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
 import org.example.services.AccountService;
 import org.example.services.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -29,7 +26,7 @@ public class AccountController{
 
     @GetMapping("/getBalance/{id}")
     public long getBalance(@PathVariable long id){
-        return userMapper.toDto(userService.getUserById(id).orElseThrow()).getAccountDTO().getBalance();
+        return userMapper.toDto(userService.getUserById(id).orElseThrow()).getAccountDto().getBalance();
     }
 
     @PutMapping("/upBalance/{id}")
