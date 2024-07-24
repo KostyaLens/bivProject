@@ -1,5 +1,6 @@
 package org.example.services;
 
+import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
 import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +9,11 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
+@RequiredArgsConstructor
 public class UserService {
 
     @Autowired
-    private  UserRepository userRepository;
+    private final UserRepository userRepository;
 
     public void save(User user){
         userRepository.save(user);
@@ -26,7 +28,7 @@ public class UserService {
     }
 
     public void update(User user, long id){
-        userRepository.deleteById(id);
+        user.setId(id);
         save(user);
     }
 }

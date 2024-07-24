@@ -16,6 +16,6 @@ public class AccountDTO {
 
     private short pinCode;
 
-    private long bankAccount;
+    private long balance;
 
 }

@@ -22,6 +22,6 @@ public class Account {
     private short pinCode;
 
     @Column
-    private long bankAccount;
+    private long balance;
 }
 
