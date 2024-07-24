@@ -8,8 +8,11 @@ import lombok.Data;
 import lombok.Generated;
 import lombok.NoArgsConstructor;
 import org.example.validatros.Password;
+import org.springframework.data.annotation.CreatedDate;
+import org.springframework.data.annotation.LastModifiedDate;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Table
 @Data
@@ -22,13 +25,15 @@ public class User {
     private long id;
 
     @Column
-    private LocalDate dateOfCreating = LocalDate.now();
+    @CreatedDate
+    private LocalDateTime createdDate;
 
     @Column
-    private LocalDate dateOfChange  = LocalDate.now();
+    @LastModifiedDate
+    private LocalDateTime lastModifiedDate;
 
     @Column
-    private String FIO;
+    private String fio;
 
     @Column
     private String email;

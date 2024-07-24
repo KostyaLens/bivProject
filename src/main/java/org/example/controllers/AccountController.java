@@ -2,14 +2,13 @@ package org.example.controllers;
 
 import jakarta.validation.constraints.Min;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.AccountDTO;
-import org.example.dto.UserTDO;
+import org.example.dto.AccountDto;
+import org.example.entity.Account;
 import org.example.exception.NotEnoughFundsException;
 import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
 import org.example.services.AccountService;
 import org.example.services.UserService;
-import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,13 +22,12 @@ public class AccountController{
 
     private final UserService userService;
 
-    private final UserMapper userMapper;
-
     private final AccountMapper accountMapper;
 
     @GetMapping("/getBalance/{id}")
     public long getBalance(@PathVariable long id){
-        return userMapper.toDto(userService.getUserById(id).orElseThrow()).getAccountDTO().getBalance();
+        AccountDto accountDto = accountMapper.toDto(userService.getUserById(id).orElseThrow().getAccount());
+        return accountDto.getBalance();
     }
 
     @PutMapping("/upBalance/{id}")
@@ -43,7 +41,7 @@ public class AccountController{
     }
 
     @PutMapping("/transfer")
-    public void transfer(@RequestParam long fromUserId, @RequestParam long toUserId, @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму") long amount) throws NotEnoughFundsException {
+    public void transfer(@RequestParam long fromUserId, @RequestParam long toUserId, @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму")  long amount) throws NotEnoughFundsException {
         accountService.downBalance(fromUserId, amount);
         accountService.upBalance(toUserId, amount);
     }

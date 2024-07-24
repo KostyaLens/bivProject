@@ -2,18 +2,17 @@ package org.example.controllers;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.example.dto.UserCreationDto;
 import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
 import org.example.services.AccountService;
 import org.example.services.UserService;
-import org.example.dto.UserTDO;
+import org.example.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
-import java.time.LocalDate;
 
 @RestController
 @RequestMapping("/user")
@@ -29,9 +28,9 @@ public class UserController {
     private final AccountMapper accountMapper;
 
     @PostMapping("/add")
-    public void registrationUser(@RequestBody @Valid UserTDO userTDO){
-        userTDO.setAccountDTO(accountMapper.toDto(accountService.createAccount(new Account())));
-        userService.save(userMapper.toEntity(userTDO));
+    public void registrationUser(@RequestBody @Valid UserCreationDto userDto){
+        userDto.setAccountDTO(accountMapper.toDto(accountService.createAccount(new Account())));
+        userService.save(userMapper.toEntity(userDto));
     }
 
     @GetMapping("/{id}")
@@ -52,10 +51,10 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody UserTDO userDTO, @PathVariable long id){
+    public ResponseEntity<?> updateUser(@RequestBody UserCreationDto userDTO, @PathVariable long id){
         try {
             User user = userMapper.updateUserFromDto(userDTO, userService.getUserById(id).orElseThrow());
-            userService.update(user, id);
+            userService.update(user);
             return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
         }catch (Exception ex){
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
