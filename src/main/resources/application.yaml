@@ -10,3 +10,8 @@ spring:
   h2:
     console:
       enabled: true
+security:
+  jwt:
+    secret: ZGhhc2xhc2Roc2FsZGhhc2Rhc2RrbGQvc2hhc2RoOz9BZGFzZDMyZWRzYw==
+    access: 3600000
+    refresh: 2592000000

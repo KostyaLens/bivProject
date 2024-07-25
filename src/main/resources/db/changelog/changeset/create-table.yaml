@@ -49,10 +49,10 @@ databaseChangeLog:
                   name: fio
                   type: varchar(250)
               - column:
-                  name: createdDate
+                  name: created_Date
                   type: timestamp
               - column:
-                  name: lastModifiedDate
+                  name: last_Modified_Date
                   type: timestamp
               - column:
                   name: account_id

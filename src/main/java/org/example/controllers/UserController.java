@@ -5,6 +5,8 @@ import lombok.RequiredArgsConstructor;
 import org.example.dto.UserCreationDto;
 import org.example.entity.Account;
 import org.example.entity.User;
+import org.example.exception.NotEnoughFundsException;
+import org.example.exception.NotFoundUserException;
 import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
 import org.example.services.AccountService;
@@ -25,22 +27,21 @@ public class UserController {
 
     private final UserMapper userMapper;
 
-    private final AccountMapper accountMapper;
-
-    @PostMapping("/add")
-    public void registrationUser(@RequestBody @Valid UserCreationDto userDto){
-        userDto.setAccountDTO(accountMapper.toDto(accountService.createAccount(new Account())));
-        userService.save(userMapper.toEntity(userDto));
-    }
+//    @PostMapping("/add")
+//    public void registrationUser(@RequestBody @Valid UserCreationDto userDto){
+//        User user = userMapper.toEntity(userDto);
+//        user.setAccount(accountService.createAccount(new Account()));
+//        userService.save(user);
+//    }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable long id){
+    public ResponseEntity<?> getUser(@PathVariable long id) throws NotFoundUserException {
         try {
             User user = userService.getUserById(id).orElseThrow();
             return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
         }
         catch (Exception e){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+            throw new NotFoundUserException("Пользователь не найден");
         }
     }
 
@@ -51,13 +52,14 @@ public class UserController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody UserCreationDto userDTO, @PathVariable long id){
+    public ResponseEntity<?> updateUser(@RequestBody UserCreationDto userDTO, @PathVariable long id) throws NotFoundUserException {
         try {
             User user = userMapper.updateUserFromDto(userDTO, userService.getUserById(id).orElseThrow());
             userService.update(user);
             return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
-        }catch (Exception ex){
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+        catch (Exception e){
+                throw new NotFoundUserException("Пользователь не найден");
         }
     }
 

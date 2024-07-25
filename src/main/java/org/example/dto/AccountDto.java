@@ -9,8 +9,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class AccountDto {
 
-    private long id;
-
     private boolean activity;
 
     private short pinCode;
