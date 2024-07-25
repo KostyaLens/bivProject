@@ -7,7 +7,7 @@ import java.lang.annotation.*;
 
 @Documented
 @Target(ElementType.FIELD)
-@Constraint(validatedBy = PasswordValidotor.class)
+@Constraint(validatedBy = PasswordValidator.class)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface Password {
     String message() default "Пароль должен содержать символы верхнего и нижнего регистра, а также цифры";

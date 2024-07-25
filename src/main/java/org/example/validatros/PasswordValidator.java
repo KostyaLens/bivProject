@@ -3,7 +3,7 @@ package org.example.validatros;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-public class PasswordValidotor implements ConstraintValidator<Password, String> {
+public class PasswordValidator implements ConstraintValidator<Password, String> {
     @Override
     public void initialize(Password constraintAnnotation) {
         ConstraintValidator.super.initialize(constraintAnnotation);

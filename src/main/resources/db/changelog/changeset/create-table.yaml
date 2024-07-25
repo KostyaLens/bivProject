@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-account-table
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: balance
+                  type: bigint
+              - column:
+                  name: is_active
+                  type: boolean
+              - column:
+                  name: pin_code
+                  type: smallint
+  - changeSet:
+      id: create-table-user
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(250)
+              - column:
+                  name: email
+                  type: varchar(250)
+              - column:
+                  name: password
+                  type: varchar(250)
+              - column:
+                  name: fio
+                  type: varchar(250)
+              - column:
+                  name: createdDate
+                  type: timestamp
+              - column:
+                  name: lastModifiedDate
+                  type: timestamp
+              - column:
+                  name: account_id
+                  type: bigint
+                  constraints:
+                    nullable: false
+                    foreignKeyName: user_account_fk
+                    referencedTableName: account
+                    referencedColumnNames: id
