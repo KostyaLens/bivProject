@@ -18,9 +18,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.security.PublicKey;
 import java.util.Date;
-import java.util.Optional;
+
 
 @Service
 @RequiredArgsConstructor
@@ -32,24 +31,24 @@ public class JwtTokenProvider {
     private Key key;
 
     @PostConstruct
-    public void init(){
+    public void init() {
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
-    public String createAccessToken(long userId, String username, String fio){
+    public String createAccessToken(long userId, String username, String fio) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("id", userId);
         claims.put("fio", fio);
         Date now = new Date();
-        Date validity = new Date(now.getTime()+jwtProperties.getAccess());
+        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
         return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(validity).signWith(key).compact();
     }
 
-    public String createRefreshToken(long userId, String username){
+    public String createRefreshToken(long userId, String username) {
         Claims claims = Jwts.claims().setSubject(username);
         claims.put("id", userId);
         Date now = new Date();
-        Date validity = new Date(now.getTime()+jwtProperties.getAccess());
+        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
         return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(validity).signWith(key).compact();
     }
 
@@ -59,17 +58,17 @@ public class JwtTokenProvider {
             throw new NotFoundUserException("Такой пользователь не найден");
         }
         Long userId = Long.valueOf(getId(refreshToken));
-        Optional<User> user = userService.getUserById(userId);
+        User user = userService.getUserById(userId).orElseThrow();
         jwtResponse.setId(userId);
-        jwtResponse.setUsername(user.get().getUsername());
-        jwtResponse.setAccessToken(createAccessToken(userId, user.get().getUsername(), user.get().getFio()));
-        jwtResponse.setRefreshToken(createRefreshToken(userId, user.get().getUsername()));
+        jwtResponse.setUsername(user.getUsername());
+        jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getFio()));
+        jwtResponse.setRefreshToken(createRefreshToken(userId, user.getUsername()));
         return jwtResponse;
     }
 
     public boolean isValid(String token) {
         Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-        return !claims.getBody().getExpiration().after(new Date());
+        return !claims.getBody().getExpiration().before(new Date());
     }
 
     private String getId(String token) {
@@ -85,5 +84,4 @@ public class JwtTokenProvider {
         UserDetails userDetails = userDetailsService.loadUserByUsername(username);
         return new UsernamePasswordAuthenticationToken(userDetails, "", userDetails.getAuthorities());
     }
-
 }

@@ -1,6 +1,7 @@
-package org.example.security;
+package org.example.mappers;
 
 import org.example.entity.User;
+import org.example.security.JwtEntity;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")

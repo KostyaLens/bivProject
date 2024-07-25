@@ -23,8 +23,7 @@ public class AuthService {
         User user = userService.getByUsername(loginRequest.getUsername());
         jwtResponse.setId(user.getId());
         jwtResponse.setUsername(user.getUsername());
-        String s = jwtTokenProvider.createAccessToken(user.getId(), user.getUsername(), user.getFio());
-        jwtResponse.setAccessToken(s);
+        jwtResponse.setAccessToken(jwtTokenProvider.createAccessToken(user.getId(), user.getUsername(), user.getFio()));
         jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(user.getId(), user.getUsername()));
         return jwtResponse;
     }

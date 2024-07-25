@@ -2,6 +2,7 @@ package org.example.security;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
+import org.example.mappers.JwtMapper;
 import org.example.services.UserService;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
