@@ -10,7 +10,6 @@ import java.util.List;
 
 @Data
 public class JwtEntity implements UserDetails {
-    private long id;
 
     private String fio;
 

@@ -23,6 +23,6 @@ public class PasswordValidator implements ConstraintValidator<Password, String> 
                 digit = true;
             }
         }
-        return (low && digit && high);
+        return (low && digit && high && (s.length()>=8));
     }
 }

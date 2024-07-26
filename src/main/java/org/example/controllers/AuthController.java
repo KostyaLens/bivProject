@@ -6,7 +6,6 @@ import org.example.dto.JwtRequest;
 import org.example.dto.JwtResponse;
 import org.example.dto.UserCreationDto;
 import org.example.dto.UserDto;
-import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.exception.NotFoundUserException;
 import org.example.mappers.UserMapper;
@@ -28,14 +27,13 @@ public class AuthController {
     private final AccountService accountService;
 
     @PostMapping("/login")
-    public JwtResponse login(@RequestBody JwtRequest loginRequest){
+    public JwtResponse login(@RequestBody JwtRequest loginRequest) {
         return authService.login(loginRequest);
     }
 
     @PostMapping("/register")
-    public UserDto register(@Valid @RequestBody UserCreationDto userDto){
+    public UserDto register(@Valid @RequestBody UserCreationDto userDto) {
         User user = userMapper.toEntity(userDto);
-        user.setAccount(accountService.createAccount(new Account()));
         userService.save(user);
         return userMapper.toDto(user);
     }

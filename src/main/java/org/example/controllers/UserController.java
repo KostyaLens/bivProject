@@ -1,17 +1,13 @@
 package org.example.controllers;
 
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.UserCreationDto;
-import org.example.entity.Account;
 import org.example.entity.User;
-import org.example.exception.NotEnoughFundsException;
 import org.example.exception.NotFoundUserException;
-import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
+import org.example.security.IAuthenticationFacade;
 import org.example.services.AccountService;
 import org.example.services.UserService;
-import org.example.dto.UserDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,39 +23,32 @@ public class UserController {
 
     private final UserMapper userMapper;
 
-//    @PostMapping("/add")
-//    public void registrationUser(@RequestBody @Valid UserCreationDto userDto){
-//        User user = userMapper.toEntity(userDto);
-//        user.setAccount(accountService.createAccount(new Account()));
-//        userService.save(user);
-//    }
+    private final IAuthenticationFacade authenticationFacade;
 
-    @GetMapping("/{id}")
-    public ResponseEntity<?> getUser(@PathVariable long id) throws NotFoundUserException {
+
+    @GetMapping("getUser")
+    public ResponseEntity<?> getUser() throws NotFoundUserException {
         try {
-            User user = userService.getUserById(id).orElseThrow();
+            User user = userService.getByUsername(authenticationFacade.getAuthentication().getName());
             return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             throw new NotFoundUserException("Пользователь не найден");
         }
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteUser(@PathVariable long id){
-        accountService.deleteById(id);
-        userService.deleteById(id);
+    @DeleteMapping("/deleteUser")
+    public void deleteUser() {
+        userService.deleteById(userService.getByUsername(authenticationFacade.getAuthentication().getName()).getId());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateUser(@RequestBody UserCreationDto userDTO, @PathVariable long id) throws NotFoundUserException {
+    @PutMapping("/Update")
+    public ResponseEntity<?> updateUser(@RequestBody UserCreationDto userDTO) throws NotFoundUserException {
         try {
-            User user = userMapper.updateUserFromDto(userDTO, userService.getUserById(id).orElseThrow());
+            User user = userMapper.updateUserFromDto(userDTO, userService.getByUsername(authenticationFacade.getAuthentication().getName()));
             userService.update(user);
             return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
-        }
-        catch (Exception e){
-                throw new NotFoundUserException("Пользователь не найден");
+        } catch (Exception e) {
+            throw new NotFoundUserException("Пользователь не найден");
         }
     }
 

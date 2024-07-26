@@ -2,11 +2,11 @@ package org.example.services;
 
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Account;
+import org.example.entity.User;
 import org.example.exception.NotEnoughFundsException;
 import org.example.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
@@ -19,23 +19,25 @@ public class AccountService {
         return account;
     }
 
-    public Optional<Account> getAccountById(long id){
-        return accountRepository.findById(id);
+    public Account getAccountByUser(User user){
+        return accountRepository.findByUser(user);
     }
 
-    public void upBalance(long id, long amount){
-        Account account = accountRepository.findById(id).orElseThrow();
+    public void upBalance(Account account, String pinCode, long amount){
         account.setBalance(account.getBalance() + amount);
         accountRepository.save(account);
     }
 
-    public void downBalance(long id, long amount){
-        Account account = accountRepository.findById(id).orElseThrow();
-        account.setBalance(account.getBalance() - amount);
+    public void upBalance(Account account, long amount){
+        account.setBalance(account.getBalance() + amount);
         accountRepository.save(account);
     }
 
-    public void deleteById(long id){
-        accountRepository.deleteById(id);
+    public void downBalance(Account account, String pinCode, long amount) throws NotEnoughFundsException {
+        if (account.getBalance() < amount){
+            throw new NotEnoughFundsException("Недостаточно средсв");
+        }
+        account.setBalance(account.getBalance() - amount);
+        accountRepository.save(account);
     }
 }

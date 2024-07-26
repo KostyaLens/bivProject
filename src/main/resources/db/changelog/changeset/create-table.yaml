@@ -21,7 +21,10 @@ databaseChangeLog:
                   type: boolean
               - column:
                   name: pin_code
-                  type: smallint
+                  type: varchar(200)
+              - column:
+                  name: users_id
+                  type: bigint
   - changeSet:
       id: create-table-user
       author: Konstantin Manoilov
@@ -57,8 +60,23 @@ databaseChangeLog:
               - column:
                   name: account_id
                   type: bigint
-                  constraints:
-                    nullable: false
-                    foreignKeyName: user_account_fk
-                    referencedTableName: account
-                    referencedColumnNames: id
+  - changeSet:
+      id: add-foreign-key-user-account
+      author: Konstantin Manoilov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: account_id
+            constraintName: user_account_fk
+            referencedTableName: account
+            referencedColumnNames: id
+  - changeSet:
+      id: add-foreign-key-account-users
+      author: Konstantin Manoilov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: users_id
+            constraintName: account_user_fk
+            referencedTableName: users
+            referencedColumnNames: id

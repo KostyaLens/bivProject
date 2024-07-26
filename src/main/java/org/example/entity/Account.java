@@ -19,9 +19,13 @@ public class Account {
     private boolean isActive;
 
     @Column
-    private short pinCode;
+    private String pinCode;
 
     @Column
     private long balance;
+
+    @OneToOne
+    @JoinColumn(name = "users_id")
+    private User user;
 }
 

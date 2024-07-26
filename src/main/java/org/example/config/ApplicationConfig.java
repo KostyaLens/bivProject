@@ -60,7 +60,7 @@ public class ApplicationConfig {
                                                             .value()
                                             );
                                             response.getWriter()
-                                                    .write("Unauthorized.");
+                                                    .write("Не удалось авторицироваться");
                                         })
                                 .accessDeniedHandler(
                                         (request, response, exception) -> {
@@ -69,7 +69,7 @@ public class ApplicationConfig {
                                                             .value()
                                             );
                                             response.getWriter()
-                                                    .write("Unauthorized.");
+                                                    .write("Не удалось авторицироваться");
                                         }))
                 .authorizeHttpRequests(configurer ->
                         configurer.requestMatchers("/auth/**")

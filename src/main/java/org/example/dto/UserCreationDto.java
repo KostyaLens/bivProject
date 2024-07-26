@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.example.validatros.Password;
+import org.example.validatros.UniqueEmail;
+import org.example.validatros.UniqueUsername;
 
 @Data
 @RequiredArgsConstructor
@@ -14,9 +16,11 @@ public class UserCreationDto {
     private String fio;
 
     @Email(message = "Такого email не существуе")
+    @UniqueEmail
     private String email;
 
     @NotEmpty(message = "Введите username")
+    @UniqueUsername
     private String username;
 
     @Password
