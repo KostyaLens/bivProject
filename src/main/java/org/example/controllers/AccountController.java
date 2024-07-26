@@ -56,7 +56,8 @@ public class AccountController{
     }
 
     @PutMapping("/upBalance")
-    public void upBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode, @RequestParam @Min(value = 0, message = "Не возможно пополнить баланс отрицаьтельной суммой") long amount) throws WrongPinCodeException {
+    public void upBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode, @RequestParam
+    @Min(value = 0, message = "Не возможно пополнить баланс отрицаьтельной суммой") long amount) throws WrongPinCodeException {
         Account account = getAccount(authenticationFacade.getAuthentication().getName());
         if (!pinCode.equals(account.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");
@@ -74,7 +75,9 @@ public class AccountController{
     }
 
     @PutMapping("/transfer")
-    public void transfer(@RequestParam String recipientUsername, @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму")  long amount, @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws NotEnoughFundsException, WrongPinCodeException {
+    public void transfer(@RequestParam String recipientUsername,
+                         @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму") long amount,
+                         @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws NotEnoughFundsException, WrongPinCodeException {
         Account sender = getAccount(authenticationFacade.getAuthentication().getName());
         if (!pinCode.equals(sender.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");

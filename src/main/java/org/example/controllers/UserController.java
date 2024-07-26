@@ -12,6 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -26,7 +28,7 @@ public class UserController {
     private final IAuthenticationFacade authenticationFacade;
 
 
-    @GetMapping("getUser")
+    @GetMapping("info")
     public ResponseEntity<?> getUser() throws NotFoundUserException {
         try {
             User user = userService.getByUsername(authenticationFacade.getAuthentication().getName());
@@ -36,7 +38,7 @@ public class UserController {
         }
     }
 
-    @DeleteMapping("/deleteUser")
+    @DeleteMapping("/delete")
     public void deleteUser() {
         userService.deleteById(userService.getByUsername(authenticationFacade.getAuthentication().getName()).getId());
     }

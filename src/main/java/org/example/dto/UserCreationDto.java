@@ -17,6 +17,7 @@ public class UserCreationDto {
 
     @Email(message = "Такого email не существуе")
     @UniqueEmail
+    @NotEmpty(message = "Введите email")
     private String email;
 
     @NotEmpty(message = "Введите username")
@@ -24,7 +25,6 @@ public class UserCreationDto {
     private String username;
 
     @Password
+    @NotEmpty(message = "Введите password")
     private String password;
-
-    private AccountDto accountDTO;
 }

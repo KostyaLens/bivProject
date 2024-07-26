@@ -11,13 +11,10 @@ import org.mapstruct.NullValuePropertyMappingStrategy;
 @Mapper(componentModel = "spring", nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
 public interface UserMapper {
 
-    @Mapping(target = "accountDTO", source = "account")
     UserDto toDto(User user);
 
-    @Mapping(target = "account", source = "accountDTO")
     User toEntity(UserDto userDto);
-
-    @Mapping(target = "account", source = "accountDTO")
+    
     User toEntity(UserCreationDto userDto);
 
     User updateUserFromDto(UserCreationDto userDto, @MappingTarget User user);
