@@ -1,7 +1,9 @@
 package org.example.services;
 
+import jakarta.persistence.Cacheable;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.User;
+import org.example.exception.NotFoundUserException;
 import org.example.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,7 +36,8 @@ public class UserService {
         userRepository.save(user);
     }
 
-    public User getByUsername(String username){
-        return userRepository.findByUsername(username);
+
+    public User getByUsername(String username) throws NotFoundUserException {
+        return userRepository.findByUsername(username).orElseThrow(() ->  new NotFoundUserException("Пользователь не найден"));
     }
 }

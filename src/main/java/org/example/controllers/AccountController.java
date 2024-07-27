@@ -8,6 +8,7 @@ import org.example.dto.AccountDto;
 import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.exception.NotEnoughFundsException;
+import org.example.exception.NotFoundUserException;
 import org.example.exception.WrongPinCodeException;
 import org.example.mappers.AccountMapper;
 import org.example.mappers.UserMapper;
@@ -36,7 +37,7 @@ public class AccountController{
     private final IAuthenticationFacade authenticationFacade;
 
     @PostMapping("/createdAccount")
-    public AccountDto createAccount(@Valid @RequestBody AccountDto accountDto){
+    public AccountDto createAccount(@Valid @RequestBody AccountDto accountDto) throws NotFoundUserException {
         accountDto.setActive(true);
         User user = userService.getByUsername(authenticationFacade.getAuthentication().getName());
         Account account = accountMapper.toEntity(accountDto);
@@ -46,7 +47,7 @@ public class AccountController{
     }
 
     @GetMapping("/getBalance")
-    public long getBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws WrongPinCodeException {
+    public long getBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws WrongPinCodeException, NotFoundUserException {
         Account account = getAccount(authenticationFacade.getAuthentication().getName());
         if (!pinCode.equals(account.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");
@@ -57,7 +58,7 @@ public class AccountController{
 
     @PutMapping("/upBalance")
     public void upBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode, @RequestParam
-    @Min(value = 0, message = "Не возможно пополнить баланс отрицаьтельной суммой") long amount) throws WrongPinCodeException {
+    @Min(value = 0, message = "Не возможно пополнить баланс отрицаьтельной суммой") long amount) throws WrongPinCodeException, NotFoundUserException {
         Account account = getAccount(authenticationFacade.getAuthentication().getName());
         if (!pinCode.equals(account.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");
@@ -66,7 +67,9 @@ public class AccountController{
     }
 
     @PutMapping("/downBalance")
-    public void downBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode, @RequestParam @Min(value = 0, message = "Не возможно снять с баланса отрицательную сумму") long amount) throws NotEnoughFundsException, WrongPinCodeException {
+    public void downBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode,
+                            @RequestParam @Min(value = 0, message = "Не возможно снять с баланса отрицательную сумму") long amount)
+            throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserException {
         Account account = getAccount(authenticationFacade.getAuthentication().getName());
         if (!pinCode.equals(account.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");
@@ -77,7 +80,7 @@ public class AccountController{
     @PutMapping("/transfer")
     public void transfer(@RequestParam String recipientUsername,
                          @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму") long amount,
-                         @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws NotEnoughFundsException, WrongPinCodeException {
+                         @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserException {
         Account sender = getAccount(authenticationFacade.getAuthentication().getName());
         if (!pinCode.equals(sender.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");
@@ -87,7 +90,7 @@ public class AccountController{
         accountService.upBalance(recipient, amount);
     }
 
-    private Account getAccount(String username){
+    private Account getAccount(String username) throws NotFoundUserException {
         User user = userService.getByUsername(username);
         return accountService.getAccountByUser(user);
     }

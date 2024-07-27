@@ -27,31 +27,21 @@ public class UserController {
 
     private final IAuthenticationFacade authenticationFacade;
 
-
     @GetMapping("info")
-    public ResponseEntity<?> getUser() throws NotFoundUserException {
-        try {
-            User user = userService.getByUsername(authenticationFacade.getAuthentication().getName());
-            return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new NotFoundUserException("Пользователь не найден");
-        }
+    public User getUser() throws NotFoundUserException {
+        return userService.getByUsername(authenticationFacade.getAuthentication().getName());
     }
 
     @DeleteMapping("/delete")
-    public void deleteUser() {
+    public void deleteUser() throws NotFoundUserException {
         userService.deleteById(userService.getByUsername(authenticationFacade.getAuthentication().getName()).getId());
     }
 
     @PutMapping("/Update")
-    public ResponseEntity<?> updateUser(@RequestBody UserCreationDto userDTO) throws NotFoundUserException {
-        try {
-            User user = userMapper.updateUserFromDto(userDTO, userService.getByUsername(authenticationFacade.getAuthentication().getName()));
-            userService.update(user);
-            return new ResponseEntity<>(userMapper.toDto(user), HttpStatus.OK);
-        } catch (Exception e) {
-            throw new NotFoundUserException("Пользователь не найден");
-        }
+    public User updateUser(@RequestBody UserCreationDto userDTO) throws NotFoundUserException {
+        User user = userService.getByUsername(authenticationFacade.getAuthentication().getName());
+        userService.update(user);
+        return user;
     }
 
 }
