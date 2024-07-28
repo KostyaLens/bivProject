@@ -1,6 +1,7 @@
 package org.example.security;
 
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.example.entity.User;
 import org.example.mappers.JwtMapper;
 import org.example.services.UserService;
@@ -17,6 +18,7 @@ public class JwtUserDetailService implements UserDetailsService {
 
     private final JwtMapper jwtMapper;
 
+    @SneakyThrows
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         User user = userService.getByUsername(username);

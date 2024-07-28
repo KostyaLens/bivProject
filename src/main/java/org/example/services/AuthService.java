@@ -17,7 +17,7 @@ public class AuthService {
     private final UserService userService;
     private final JwtTokenProvider jwtTokenProvider;
 
-    public JwtResponse login(JwtRequest loginRequest) {
+    public JwtResponse login(JwtRequest loginRequest) throws NotFoundUserException {
         JwtResponse jwtResponse = new JwtResponse();
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         User user = userService.getByUsername(loginRequest.getUsername());
