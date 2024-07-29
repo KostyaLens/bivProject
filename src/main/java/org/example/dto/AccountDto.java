@@ -12,8 +12,7 @@ public class AccountDto {
 
     private boolean isActive;
 
-    @PinCode
-    private String pinCode;
-
     private long balance;
+
+    private String socialMediaStatus;
 }

@@ -9,7 +9,6 @@ import org.example.dto.UserDto;
 import org.example.entity.User;
 import org.example.exception.NotFoundUserException;
 import org.example.mappers.UserMapper;
-import org.example.services.AccountService;
 import org.example.services.AuthService;
 import org.example.services.UserService;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -24,7 +23,6 @@ public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final AuthService authService;
-    private final AccountService accountService;
 
     @PostMapping("/login")
     public JwtResponse login(@RequestBody JwtRequest loginRequest) throws NotFoundUserException {

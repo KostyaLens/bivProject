@@ -1,26 +1,22 @@
 package org.example.controllers;
 
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.Min;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.RequiredArgsConstructor;
-import org.example.dto.AccountDto;
+
+import org.example.dto.*;
 import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.exception.NotEnoughFundsException;
 import org.example.exception.NotFoundUserException;
 import org.example.exception.WrongPinCodeException;
 import org.example.mappers.AccountMapper;
-import org.example.mappers.UserMapper;
-import org.example.security.IAuthenticationFacade;
+import org.example.security.AuthenticationFacade;
 import org.example.services.AccountService;
 import org.example.services.UserService;
-import org.example.validatros.PinCode;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
@@ -34,61 +30,58 @@ public class AccountController{
 
     private final AccountMapper accountMapper;
 
-    private final IAuthenticationFacade authenticationFacade;
+    private final AuthenticationFacade authenticationFacade;
 
-    @PostMapping("/createdAccount")
-    public AccountDto createAccount(@Valid @RequestBody AccountDto accountDto) throws NotFoundUserException {
-        accountDto.setActive(true);
-        User user = userService.getByUsername(authenticationFacade.getAuthentication().getName());
-        Account account = accountMapper.toEntity(accountDto);
+    @PostMapping("/created")
+    public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto) throws NotFoundUserException {
+        User user = userService.getByUsername(authenticationFacade.getCurrentUserName());
+        Account account = accountMapper.toEntity(createAccountDto);
+        account.setActive(true);
         account.setUser(user);
         accountService.createAccount(account);
-        return accountDto;
+        return accountMapper.toDto(account);
     }
 
-    @GetMapping("/getBalance")
-    public long getBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws WrongPinCodeException, NotFoundUserException {
-        Account account = getAccount(authenticationFacade.getAuthentication().getName());
-        if (!pinCode.equals(account.getPinCode())){
-            throw new WrongPinCodeException("Неверный пин-код");
-        }
-        AccountDto accountDto = accountMapper.toDto(account);
-        return accountDto.getBalance();
+    @GetMapping("/info")
+    public AccountDto infoAccount(@RequestBody @Valid RequestInfoAccountDto accountDto)
+            throws WrongPinCodeException, NotFoundUserException {
+        Account account = getAccount(authenticationFacade.getCurrentUserName());
+        accountService.checkPinCode(account, accountDto.getPinCode());
+        return accountMapper.toDto(account);
     }
 
-    @PutMapping("/upBalance")
-    public void upBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode, @RequestParam
-    @Min(value = 0, message = "Не возможно пополнить баланс отрицаьтельной суммой") long amount) throws WrongPinCodeException, NotFoundUserException {
-        Account account = getAccount(authenticationFacade.getAuthentication().getName());
-        if (!pinCode.equals(account.getPinCode())){
-            throw new WrongPinCodeException("Неверный пин-код");
-        }
-        accountService.upBalance(account, pinCode, amount);
+    @PutMapping("/deposit")
+    public ResponseEntity<String> deposit(@RequestBody @Valid RequestAccountDto requestAccountDto) throws WrongPinCodeException, NotFoundUserException {
+        Account account = getAccount(authenticationFacade.getCurrentUserName());
+        accountService.deposit(account, requestAccountDto.getPinCode(), requestAccountDto.getAmount());
+        return ResponseEntity.ok("Счёт пополнен");
     }
 
-    @PutMapping("/downBalance")
-    public void downBalance(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode,
-                            @RequestParam @Min(value = 0, message = "Не возможно снять с баланса отрицательную сумму") long amount)
+    @PutMapping("/withdraw")
+    public ResponseEntity<String> withdraw(@RequestBody @Valid RequestAccountDto requestAccountDto)
             throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserException {
-        Account account = getAccount(authenticationFacade.getAuthentication().getName());
-        if (!pinCode.equals(account.getPinCode())){
-            throw new WrongPinCodeException("Неверный пин-код");
-        }
-        accountService.downBalance(account, pinCode, amount);
+        Account account = getAccount(authenticationFacade.getCurrentUserName());
+        accountService.withdraw(account, requestAccountDto.getPinCode(), requestAccountDto.getAmount());
+        return ResponseEntity.ok("Деньги с счёта списаны успешно");
     }
 
     @PutMapping("/transfer")
-    public void transfer(@RequestParam String recipientUsername,
-                         @RequestParam @Min(value = 0, message = "Не возможно перевемсти на другой счёт отрицательную сумму") long amount,
-                         @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode) throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserException {
-        Account sender = getAccount(authenticationFacade.getAuthentication().getName());
-        if (!pinCode.equals(sender.getPinCode())){
-            throw new WrongPinCodeException("Неверный пин-код");
-        }
-        accountService.downBalance(sender, pinCode, amount);
-        Account recipient = getAccount(recipientUsername);
-        accountService.upBalance(recipient, amount);
+    public ResponseEntity<String> transfer(@RequestBody @Valid TransferDto transferDto)
+            throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserException {
+        Account sender = getAccount(authenticationFacade.getCurrentUserName());
+        Account recipient = getAccount(transferDto.getRecipientUsername());
+        accountService.transfer(sender, recipient, transferDto.getPinCode(), transferDto.getAmount());
+        return ResponseEntity.ok("Перевод выполнен");
     }
+
+    @DeleteMapping("/block-account")
+    @PreAuthorize("hasRole('ADMIN')")
+    public ResponseEntity<String> blockAccount(@RequestBody @Valid BlockAccountDto blockAccountDto) throws NotFoundUserException {
+        Account account = getAccount(blockAccountDto.getUsername());
+        accountService.blockAccount(account.getId());
+        return ResponseEntity.ok("Аккаунт пользователя заблокирован");
+    }
+
 
     private Account getAccount(String username) throws NotFoundUserException {
         User user = userService.getByUsername(username);

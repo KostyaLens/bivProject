@@ -19,6 +19,9 @@ public class Account {
     private boolean isActive;
 
     @Column
+    private String socialMediaStatus;
+
+    @Column
     private String pinCode;
 
     @Column

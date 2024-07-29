@@ -2,6 +2,7 @@ package org.example.security;
 
 import jakarta.persistence.Column;
 import lombok.Data;
+import org.example.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -18,6 +19,7 @@ public class JwtEntity implements UserDetails {
     private String username;
 
     private String password;
+    private Role role;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

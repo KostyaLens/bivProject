@@ -23,6 +23,9 @@ databaseChangeLog:
                   name: pin_code
                   type: varchar(200)
               - column:
+                  name: social_media_status
+                  type: varchar(200)
+              - column:
                   name: users_id
                   type: bigint
   - changeSet:
@@ -52,11 +55,15 @@ databaseChangeLog:
                   name: fio
                   type: varchar(250)
               - column:
-                  name: created_Date
+                  name: created_date
                   type: timestamp
               - column:
                   name: last_Modified_Date
                   type: timestamp
+              - column:
+                  name: role
+                  type: varchar(255)
+                  defaultValue: 'USER'
               - column:
                   name: account_id
                   type: bigint

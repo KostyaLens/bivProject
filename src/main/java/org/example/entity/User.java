@@ -25,11 +25,11 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column
+    @Column(name = "created_date")
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @Column
+    @Column(name = "last_Modified_Date")
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
@@ -44,6 +44,10 @@ public class User {
 
     @Column
     private String password;
+
+    @Column
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
     @OneToOne
     @JoinColumn(name = "account_id")
