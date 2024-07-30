@@ -2,11 +2,11 @@ spring:
   liquibase:
     enabled: true
   datasource:
-    url: jdbc:h2:mem:testdb
+    url: jdbc:postgresql://localhost:5432/bivProjectBD
     username: postgres
     password: lens07gada
   jpa:
-    database-platform: org.hibernate.dialect.H2Dialect
+    database-platform: org.hibernate.dialect.PostgreSQLDialect
 security:
   jwt:
     secret: ZGhhc2xhc2Roc2FsZGhhc2Rhc2RrbGQvc2hhc2RoOz9BZGFzZDMyZWRzYw==

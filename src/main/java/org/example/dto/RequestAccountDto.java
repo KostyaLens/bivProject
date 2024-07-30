@@ -13,7 +13,7 @@ import org.example.validatros.PinCode;
 public class RequestAccountDto {
     @PinCode
     @NotEmpty(message = "Не введён пин-код")
-    @Schema(name = "pin-code", example = "1111")
+    @Schema(name = "pinCode", example = "1111")
     private String pinCode;
     @Schema(name = "amount", example = "100500")
     @Min(value = 0, message = "Не удалось выполнить операцию, введена не коректаная сумма")

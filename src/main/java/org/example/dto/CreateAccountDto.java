@@ -11,9 +11,9 @@ import org.example.validatros.PinCode;
 public class CreateAccountDto {
     @PinCode
     @NotEmpty(message = "Не введён пин-код")
-    @Schema(name = "pin-code", example = "1111")
+    @Schema(name = "pinCode", example = "1111")
     private String pinCode;
-    @Schema(name = "social media status", example = "My little pony is cool")
+    @Schema(name = "socialMediaStatus", example = "My little pony is cool")
     private String socialMediaStatus;
 
 }

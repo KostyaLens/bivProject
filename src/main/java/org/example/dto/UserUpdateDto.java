@@ -12,25 +12,21 @@ import org.example.validatros.UniqueUsername;
 @Data
 @RequiredArgsConstructor
 @Schema(description = "User registration")
-public class UserCreationDto {
+public class UserUpdateDto {
 
-    @NotEmpty(message = "Заполниете поле ФИО")
     @Schema(name = "fio", example = "Семёнов Иван Павлович")
     private String fio;
 
-    @Email(message = "Такого email не существуе")
     @UniqueEmail
     @NotEmpty(message = "Введите email")
     @Schema(name = "email", example = "mail@mail.ru")
     private String email;
 
-    @NotEmpty(message = "Введите username")
     @UniqueUsername
     @Schema(name = "username", example = "username")
     private String username;
 
     @Password
-    @NotEmpty(message = "Введите password")
     @Schema(name = "password", example = "Passw0rd")
     private String password;
 }

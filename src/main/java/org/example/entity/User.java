@@ -11,6 +11,7 @@ import org.example.validatros.Password;
 import org.hibernate.validator.constraints.UniqueElements;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
+import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -20,16 +21,19 @@ import java.time.LocalDateTime;
 @Entity(name = "users")
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(AuditingEntityListener.class)
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
 
-    @Column(name = "created_date")
+    @Column(name = "created_date", updatable = false)
+    @Temporal(TemporalType.TIMESTAMP)
     @CreatedDate
     private LocalDateTime createdDate;
 
     @Column(name = "last_modified_date")
+    @Temporal(TemporalType.TIMESTAMP)
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 
