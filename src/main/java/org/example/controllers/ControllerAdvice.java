@@ -72,10 +72,10 @@ public class ControllerAdvice {
                 )));
         return exceptionBody;
     }
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ExceptionBody handleException(Exception e) {
-//        return new ExceptionBody("Ошибка на сервере");
-//    }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionBody handleException(Exception e) {
+        return new ExceptionBody("Ошибка на сервере");
+    }
 
 }
