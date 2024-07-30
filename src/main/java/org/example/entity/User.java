@@ -29,7 +29,7 @@ public class User {
     @CreatedDate
     private LocalDateTime createdDate;
 
-    @Column(name = "last_Modified_Date")
+    @Column(name = "last_modified_date")
     @LastModifiedDate
     private LocalDateTime lastModifiedDate;
 

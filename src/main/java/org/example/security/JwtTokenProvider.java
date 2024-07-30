@@ -50,19 +50,6 @@ public class JwtTokenProvider {
         return Jwts.builder().claims(claims).expiration(Date.from(validity.toInstant())).signWith(key).compact();
     }
 
-    public JwtResponse refreshUserTokens(String refreshToken) throws NotFoundUserOrAccountException {
-        JwtResponse jwtResponse = new JwtResponse();
-        if (!isValid(refreshToken)) {
-            throw new NotFoundUserOrAccountException("Такой пользователь не найден");
-        }
-        Long userId = Long.valueOf(getId(refreshToken));
-        User user = userService.getUserById(userId).orElseThrow();
-        jwtResponse.setUsername(user.getUsername());
-        jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getFio(), user.getRole()));
-        jwtResponse.setRefreshToken(createRefreshToken(userId, user.getUsername()));
-        return jwtResponse;
-    }
-
     public boolean isValid(String token) {
         Jws<Claims> claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
         return claims.getPayload().getExpiration().after(new Date());

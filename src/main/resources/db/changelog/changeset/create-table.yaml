@@ -58,7 +58,7 @@ databaseChangeLog:
                   name: created_date
                   type: timestamp
               - column:
-                  name: last_Modified_Date
+                  name: last_modified_date
                   type: timestamp
               - column:
                   name: role

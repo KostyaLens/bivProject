@@ -26,9 +26,4 @@ public class AuthService {
         jwtResponse.setRefreshToken(jwtTokenProvider.createRefreshToken(user.getId(), user.getUsername()));
         return jwtResponse;
     }
-
-    public JwtResponse refresh(String refreshToken) throws NotFoundUserOrAccountException {
-        return jwtTokenProvider.refreshUserTokens(refreshToken);
-    }
-
 }

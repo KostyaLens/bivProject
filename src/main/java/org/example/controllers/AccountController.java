@@ -1,6 +1,8 @@
 package org.example.controllers;
 
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.persistence.NonUniqueResultException;
 import jakarta.validation.constraints.NotEmpty;
 import org.example.dto.*;
@@ -25,6 +27,7 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping("/account")
 @RequiredArgsConstructor
+@Tag(name = "Account Controller", description = "Account API")
 public class AccountController{
 
     private final AccountService accountService;
@@ -36,6 +39,7 @@ public class AccountController{
     private final AuthenticationFacade authenticationFacade;
 
     @PostMapping("/created")
+    @Operation(summary = "Creating an account")
     public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto) throws NotFoundUserOrAccountException {
         User user = userService.getByUsername(authenticationFacade.getCurrentUserName());
         if (accountService.getAccountByUser(user) != null) {
@@ -49,6 +53,7 @@ public class AccountController{
     }
 
     @GetMapping("/info")
+    @Operation(summary = "Account Information")
     public AccountDto infoAccount(@RequestParam @PinCode @NotEmpty(message = "Не введён пин-код") String pinCode)
             throws WrongPinCodeException, NotFoundUserOrAccountException {
         Account account = getAccount(authenticationFacade.getCurrentUserName());
@@ -57,6 +62,7 @@ public class AccountController{
     }
 
     @PutMapping("/deposit")
+    @Operation(summary = "The method of replenishment of the account")
     public ResponseEntity<String> deposit(@RequestBody @Valid RequestAccountDto requestAccountDto) throws WrongPinCodeException, NotFoundUserOrAccountException {
         Account account = getAccount(authenticationFacade.getCurrentUserName());
         accountService.deposit(account, requestAccountDto.getPinCode(), requestAccountDto.getAmount());
@@ -64,6 +70,7 @@ public class AccountController{
     }
 
     @PutMapping("/withdraw")
+    @Operation(summary = "The method of withdrawal of funds from the account")
     public ResponseEntity<String> withdraw(@RequestBody @Valid RequestAccountDto requestAccountDto)
             throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserOrAccountException {
         Account account = getAccount(authenticationFacade.getCurrentUserName());
@@ -72,6 +79,7 @@ public class AccountController{
     }
 
     @PutMapping("/transfer")
+    @Operation(summary = "Transfer from one account to another")
     public ResponseEntity<String> transfer(@RequestBody @Valid TransferDto transferDto)
             throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserOrAccountException {
         Account sender = getAccount(authenticationFacade.getCurrentUserName());
@@ -82,6 +90,7 @@ public class AccountController{
 
     @DeleteMapping("/block-account")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Operation(summary = "The method for the Administrator is to block the account of any user")
     public ResponseEntity<String> blockAccount(@RequestBody @Valid BlockAccountDto blockAccountDto) throws NotFoundUserOrAccountException {
         Account account = getAccount(blockAccountDto.getUsername());
         accountService.blockAccount(account.getId());

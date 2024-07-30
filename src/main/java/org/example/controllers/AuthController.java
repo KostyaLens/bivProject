@@ -1,5 +1,7 @@
 package org.example.controllers;
 
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.JwtRequest;
@@ -19,25 +21,23 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
+@Tag(name = "Authorization Controller", description = "Authorization API")
 public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final AuthService authService;
 
     @PostMapping("/login")
+    @Operation(summary = "Login")
     public JwtResponse login(@RequestBody JwtRequest loginRequest) throws NotFoundUserOrAccountException {
         return authService.login(loginRequest);
     }
 
     @PostMapping("/register")
+    @Operation(summary = "Registration")
     public UserDto register(@Valid @RequestBody UserCreationDto userDto) {
         User user = userMapper.toEntity(userDto);
         userService.save(user);
         return userMapper.toDto(user);
-    }
-
-    @PostMapping("/refersh")
-    public JwtResponse refresh(@RequestBody String refreshToken) throws NotFoundUserOrAccountException {
-        return authService.refresh(refreshToken);
     }
 }
