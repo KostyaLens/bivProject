@@ -1,10 +1,10 @@
 package org.example.controllers;
 
-import org.example.exception.ExceptionBody;
-import org.example.exception.NotEnoughFundsException;
-import org.example.exception.NotFoundUserException;
-import org.example.exception.WrongPinCodeException;
+import jakarta.persistence.NonUniqueResultException;
+import jakarta.validation.ConstraintViolationException;
+import org.example.exception.*;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,9 +28,21 @@ public class ControllerAdvice {
         return new ExceptionBody(e.getMessage());
     }
 
-    @ExceptionHandler(NotFoundUserException.class)
+    @ExceptionHandler(NotFoundUserOrAccountException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ExceptionBody handlerNotFoundUserException(NotFoundUserException e){
+    public ExceptionBody handlerNotFoundUserException(NotFoundUserOrAccountException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
+    @ExceptionHandler(NonUniqueResultException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerNonUniqueResultException(NonUniqueResultException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionBody handleBadCredentialsException(BadCredentialsException e) {
         return new ExceptionBody(e.getMessage());
     }
 
@@ -49,11 +61,21 @@ public class ControllerAdvice {
         return exceptionBody;
     }
 
-
-//    @ExceptionHandler(Exception.class)
-//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-//    public ExceptionBody handleException(Exception e) {
-//        return new ExceptionBody("Ошибка на сервере");
-//    }
+    @ExceptionHandler(ConstraintViolationException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handleConstraintViolation(ConstraintViolationException e) {
+        ExceptionBody exceptionBody = new ExceptionBody("Validation failed.");
+        exceptionBody.setErrors(e.getConstraintViolations().stream()
+                .collect(Collectors.toMap(
+                        violation -> violation.getPropertyPath().toString(),
+                        violation -> violation.getMessage()
+                )));
+        return exceptionBody;
+    }
+    @ExceptionHandler(Exception.class)
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public ExceptionBody handleException(Exception e) {
+        return new ExceptionBody("Ошибка на сервере");
+    }
 
 }

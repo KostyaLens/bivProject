@@ -7,17 +7,17 @@ import io.jsonwebtoken.security.Keys;
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import org.example.dto.JwtResponse;
+import org.example.entity.Role;
 import org.example.entity.User;
-import org.example.exception.NotFoundUserException;
+import org.example.exception.NotFoundUserOrAccountException;
 import org.example.properties.JwtProperties;
 import org.example.services.UserService;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
+import javax.crypto.SecretKey;
 import java.util.Date;
 
 
@@ -26,56 +26,54 @@ import java.util.Date;
 public class JwtTokenProvider {
 
     private final JwtProperties jwtProperties;
-    private final UserDetailsService userDetailsService;
+    private final JwtUserDetailService userDetailsService;
     private final UserService userService;
-    private Key key;
+    private SecretKey key;
 
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(jwtProperties.getSecret().getBytes());
     }
 
-    public String createAccessToken(long userId, String username, String fio) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("id", userId);
-        claims.put("fio", fio);
+    public String createAccessToken(long userId, String username, String fio, Role role) {
+        Claims claims = Jwts.claims().subject(username).add("id", userId).add("fio", fio)
+                .add("role", "ROLE_"+role.name()).build();
         Date now = new Date();
         Date validity = new Date(now.getTime() + jwtProperties.getAccess());
-        return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(validity).signWith(key).compact();
+        return Jwts.builder().claims(claims).expiration(Date.from(validity.toInstant())).signWith(key).compact();
     }
 
     public String createRefreshToken(long userId, String username) {
-        Claims claims = Jwts.claims().setSubject(username);
-        claims.put("id", userId);
+        Claims claims = Jwts.claims().subject(username).add("id", userId).build();
         Date now = new Date();
         Date validity = new Date(now.getTime() + jwtProperties.getAccess());
-        return Jwts.builder().setClaims(claims).setIssuedAt(now).setExpiration(validity).signWith(key).compact();
+        return Jwts.builder().claims(claims).expiration(Date.from(validity.toInstant())).signWith(key).compact();
     }
 
-    public JwtResponse refreshUserTokens(String refreshToken) throws NotFoundUserException {
+    public JwtResponse refreshUserTokens(String refreshToken) throws NotFoundUserOrAccountException {
         JwtResponse jwtResponse = new JwtResponse();
         if (!isValid(refreshToken)) {
-            throw new NotFoundUserException("Такой пользователь не найден");
+            throw new NotFoundUserOrAccountException("Такой пользователь не найден");
         }
         Long userId = Long.valueOf(getId(refreshToken));
         User user = userService.getUserById(userId).orElseThrow();
         jwtResponse.setUsername(user.getUsername());
-        jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getFio()));
+        jwtResponse.setAccessToken(createAccessToken(userId, user.getUsername(), user.getFio(), user.getRole()));
         jwtResponse.setRefreshToken(createRefreshToken(userId, user.getUsername()));
         return jwtResponse;
     }
 
     public boolean isValid(String token) {
-        Jws<Claims> claims = Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token);
-        return !claims.getBody().getExpiration().before(new Date());
+        Jws<Claims> claims = Jwts.parser().verifyWith(key).build().parseSignedClaims(token);
+        return claims.getPayload().getExpiration().after(new Date());
     }
 
     private String getId(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().get("id").toString();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().get("id", String.class);
     }
 
     private String getUsername(String token) {
-        return Jwts.parserBuilder().setSigningKey(key).build().parseClaimsJws(token).getBody().getSubject();
+        return Jwts.parser().verifyWith(key).build().parseSignedClaims(token).getPayload().getSubject();
     }
 
     public Authentication getAuthentication(String token) {

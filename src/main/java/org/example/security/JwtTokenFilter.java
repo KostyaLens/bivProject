@@ -29,8 +29,8 @@ public class JwtTokenFilter extends GenericFilterBean {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
-        } catch (Exception ignored) {
-
+        } catch (Exception e) {
+            throw new Exception("Произошёл сбой");
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

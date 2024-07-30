@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.exception.NotFoundUserOrAccountException;
 import org.example.exception.WrongPinCodeException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +25,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public Account getAccountByUser(User user){
+    public Account getAccountByUser(User user) throws NotFoundUserOrAccountException {
         return accountRepository.findByUser(user);
     }
 

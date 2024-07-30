@@ -6,7 +6,6 @@ import org.springframework.security.config.annotation.method.configuration.Enabl
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 @SpringBootApplication
-@EnableGlobalMethodSecurity(prePostEnabled = true)
 @EnableTransactionManagement
 public class Main {
     public static void main(String[] args) {

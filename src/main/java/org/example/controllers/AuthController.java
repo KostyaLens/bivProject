@@ -7,7 +7,7 @@ import org.example.dto.JwtResponse;
 import org.example.dto.UserCreationDto;
 import org.example.dto.UserDto;
 import org.example.entity.User;
-import org.example.exception.NotFoundUserException;
+import org.example.exception.NotFoundUserOrAccountException;
 import org.example.mappers.UserMapper;
 import org.example.services.AuthService;
 import org.example.services.UserService;
@@ -25,7 +25,7 @@ public class AuthController {
     private final AuthService authService;
 
     @PostMapping("/login")
-    public JwtResponse login(@RequestBody JwtRequest loginRequest) throws NotFoundUserException {
+    public JwtResponse login(@RequestBody JwtRequest loginRequest) throws NotFoundUserOrAccountException {
         return authService.login(loginRequest);
     }
 
@@ -37,7 +37,7 @@ public class AuthController {
     }
 
     @PostMapping("/refersh")
-    public JwtResponse refresh(@RequestBody String refreshToken) throws NotFoundUserException {
+    public JwtResponse refresh(@RequestBody String refreshToken) throws NotFoundUserOrAccountException {
         return authService.refresh(refreshToken);
     }
 }
