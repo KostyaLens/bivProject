@@ -64,7 +64,7 @@ public class ControllerAdvice {
     @ExceptionHandler(ConstraintViolationException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleConstraintViolation(ConstraintViolationException e) {
-        ExceptionBody exceptionBody = new ExceptionBody("Validation failed.");
+        ExceptionBody exceptionBody = new ExceptionBody("Ошибка валидации");
         exceptionBody.setErrors(e.getConstraintViolations().stream()
                 .collect(Collectors.toMap(
                         violation -> violation.getPropertyPath().toString(),
