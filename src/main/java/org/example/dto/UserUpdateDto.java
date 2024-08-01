@@ -18,7 +18,6 @@ public class UserUpdateDto {
     private String fio;
 
     @UniqueEmail
-    @NotEmpty(message = "Введите email")
     @Schema(name = "email", example = "mail@mail.ru")
     private String email;
 
