@@ -2,7 +2,6 @@ package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.example.validatros.Password;
@@ -18,6 +17,7 @@ public class UserUpdateDto {
     private String fio;
 
     @UniqueEmail
+    @Email(message = "Такого email не существуе")
     @Schema(name = "email", example = "mail@mail.ru")
     private String email;
 
