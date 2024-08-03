@@ -11,7 +11,11 @@ import org.example.exception.NotFoundUserOrAccountException;
 import org.example.mappers.UserMapper;
 import org.example.security.AuthenticationFacade;
 import org.example.services.UserService;
+import org.springframework.data.domain.Page;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/user")
@@ -43,6 +47,17 @@ public class UserController {
         User user = userService.getByUsername(authenticationFacade.getCurrentUserName());
         userService.update(userMapper.updateUserFromDto(userDto, user));
         return user;
+    }
+
+    @GetMapping("/list-users")
+    @PreAuthorize("hasRole('ROLE_ADMIN')")
+    @Operation(summary = "Administration method, get list all users")
+    public Page<User> getAllUsers(@RequestParam int page,
+                                  @RequestParam int count,
+                                  @RequestParam String sortingField,
+                                  @RequestParam String sortingDirection
+                                  ){
+        return userService.getAllUsers(page, count, sortingField, sortingDirection);
     }
 
 }

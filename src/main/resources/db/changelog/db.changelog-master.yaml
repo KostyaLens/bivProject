@@ -3,3 +3,5 @@ databaseChangeLog:
       file: db/changelog/changeset/create-table.yaml
   - include:
       file: db/changelog/changeset/create-admin.yaml
+  - include:
+      file: db/changelog/changeset/completionDB.yaml
