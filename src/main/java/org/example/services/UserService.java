@@ -40,13 +40,10 @@ public class UserService {
     }
 
     public Page<User> getAllUsers(int page, int count, String sortingField, String sortingDirection){
-        switch (sortingDirection){
-            case "descending":
-                return userRepository.findAll(PageRequest.of(page, count, Sort.by(sortingField).descending()));
-            case "ascending":
-                return userRepository.findAll(PageRequest.of(page, count, Sort.by(sortingField).ascending()));
+        if (sortingDirection.equals("descending")){
+            return userRepository.findAll(PageRequest.of(page, count, Sort.by(sortingField).descending()));
         }
-        return null;
+        return userRepository.findAll(PageRequest.of(page, count, Sort.by(sortingField).ascending()));
     }
     public User getByUsername(String username) throws NotFoundUserOrAccountException {
         return userRepository.findByUsername(username).orElseThrow(() ->  new NotFoundUserOrAccountException("Пользователь не найден"));

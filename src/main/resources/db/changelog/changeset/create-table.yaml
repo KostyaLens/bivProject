@@ -1,5 +1,22 @@
 databaseChangeLog:
   - changeSet:
+      id: create-table-bank
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: bank
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(250)
+  - changeSet:
       id: create-account-table
       author: Konstantin Manoilov
       changes:
@@ -28,6 +45,15 @@ databaseChangeLog:
               - column:
                   name: users_id
                   type: bigint
+              - column:
+                  name: bank_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: bank_id
+            constraintName: fk_account_bank
+            referencedTableName: bank
+            referencedColumnNames: id
   - changeSet:
       id: create-table-user
       author: Konstantin Manoilov

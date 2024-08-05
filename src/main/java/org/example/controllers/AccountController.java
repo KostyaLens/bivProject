@@ -9,11 +9,13 @@ import org.example.dto.*;
 import org.example.entity.Account;
 import org.example.entity.User;
 import org.example.exception.NotEnoughFundsException;
+import org.example.exception.NotFoundBankException;
 import org.example.exception.NotFoundUserOrAccountException;
 import org.example.exception.WrongPinCodeException;
 import org.example.mappers.AccountMapper;
 import org.example.security.AuthenticationFacade;
 import org.example.services.AccountService;
+import org.example.services.BankService;
 import org.example.services.UserService;
 import org.example.validatros.PinCode;
 import org.springframework.http.ResponseEntity;
@@ -34,19 +36,23 @@ public class AccountController{
 
     private final UserService userService;
 
+    private final BankService bankService;
+
     private final AccountMapper accountMapper;
 
     private final AuthenticationFacade authenticationFacade;
 
     @PostMapping("/created")
     @Operation(summary = "Creating an account")
-    public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto) throws NotFoundUserOrAccountException {
+    public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto)
+            throws NotFoundUserOrAccountException, NotFoundBankException {
         User user = userService.getByUsername(authenticationFacade.getCurrentUserName());
         if (accountService.getAccountByUser(user) != null) {
             throw new NonUniqueResultException("У данного пользователя уже сущевствует аккаунт");
         }
         Account account = accountMapper.toEntity(createAccountDto);
         account.setActive(true);
+        account.setBank(bankService.getBankByName(createAccountDto.getBank()));
         account.setUser(user);
         accountService.createAccount(account);
         return accountMapper.toDto(account);

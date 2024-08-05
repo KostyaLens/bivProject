@@ -3,6 +3,7 @@ package org.example.dto;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.example.entity.Bank;
 import org.example.validatros.PinCode;
 
 @Data
@@ -15,4 +16,6 @@ public class AccountDto {
     private long balance;
 
     private String socialMediaStatus;
+
+    private Bank bank;
 }

@@ -5,3 +5,6 @@ databaseChangeLog:
       file: db/changelog/changeset/create-admin.yaml
   - include:
       file: db/changelog/changeset/completionDB.yaml
+  - include:
+      file: db/changelog/changeset/create-bank.yaml
+

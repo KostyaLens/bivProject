@@ -46,6 +46,12 @@ public class ControllerAdvice {
         return new ExceptionBody(e.getMessage());
     }
 
+    @ExceptionHandler(NotFoundBankException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerNotFoundBankException(NotFoundBankException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleMethodArgumentNotValid(MethodArgumentNotValidException e) {

@@ -54,8 +54,8 @@ public class UserController {
     @Operation(summary = "Administration method, get list all users")
     public Page<User> getAllUsers(@RequestParam int page,
                                   @RequestParam int count,
-                                  @RequestParam String sortingField,
-                                  @RequestParam String sortingDirection
+                                  @RequestParam(defaultValue = "id",required = false) String sortingField,
+                                  @RequestParam(required = false) String sortingDirection
                                   ){
         return userService.getAllUsers(page, count, sortingField, sortingDirection);
     }
