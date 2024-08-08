@@ -69,7 +69,7 @@ public class AccountController{
 
     @PutMapping("/deposit")
     @Operation(summary = "The method of replenishment of the account")
-    public ResponseEntity<String> deposit(@RequestBody @Valid RequestAccountDto requestAccountDto) throws WrongPinCodeException, NotFoundUserOrAccountException {
+     public ResponseEntity<String> deposit(@RequestBody @Valid RequestAccountDto requestAccountDto) throws WrongPinCodeException, NotFoundUserOrAccountException {
         Account account = getAccount(authenticationFacade.getCurrentUserName());
         accountService.deposit(account, requestAccountDto.getPinCode(), requestAccountDto.getAmount());
         return ResponseEntity.ok("Счёт пополнен");

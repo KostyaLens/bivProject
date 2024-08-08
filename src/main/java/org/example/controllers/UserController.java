@@ -52,12 +52,13 @@ public class UserController {
     @GetMapping("/list-users")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "Administration method, get list all users")
-    public Page<User> getAllUsers(@RequestParam int page,
+    public List<UserDto> getAllUsers(@RequestParam int page,
                                   @RequestParam int count,
-                                  @RequestParam(defaultValue = "id",required = false) String sortingField,
-                                  @RequestParam(required = false) String sortingDirection
+                                  @RequestParam(defaultValue = "id", required = false) String sortingField,
+                                  @RequestParam(defaultValue = "ascending", required = false) String sortingDirection
                                   ){
-        return userService.getAllUsers(page, count, sortingField, sortingDirection);
+        List<User> users = userService.getAllUsers(page, count, sortingField, sortingDirection).getContent();
+        return userMapper.toDtoList(users);
     }
 
 }
