@@ -1,0 +1,115 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-bank
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: bank
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(250)
+  - changeSet:
+      id: create-account-table
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: balance
+                  type: bigint
+              - column:
+                  name: is_active
+                  type: boolean
+              - column:
+                  name: pin_code
+                  type: varchar(200)
+              - column:
+                  name: social_media_status
+                  type: varchar(200)
+              - column:
+                  name: users_id
+                  type: bigint
+              - column:
+                  name: bank_id
+                  type: bigint
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: bank_id
+            constraintName: fk_account_bank
+            referencedTableName: bank
+            referencedColumnNames: id
+  - changeSet:
+      id: create-table-user
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(250)
+              - column:
+                  name: email
+                  type: varchar(250)
+              - column:
+                  name: password
+                  type: varchar(250)
+              - column:
+                  name: fio
+                  type: varchar(250)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: role
+                  type: varchar(255)
+                  defaultValue: 'USER'
+              - column:
+                  name: account_id
+                  type: bigint
+  - changeSet:
+      id: add-foreign-key-user-account
+      author: Konstantin Manoilov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: users
+            baseColumnNames: account_id
+            constraintName: user_account_fk
+            referencedTableName: account
+            referencedColumnNames: id
+  - changeSet:
+      id: add-foreign-key-account-users
+      author: Konstantin Manoilov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: users_id
+            constraintName: account_user_fk
+            referencedTableName: users
+            referencedColumnNames: id
