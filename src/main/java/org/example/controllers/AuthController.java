@@ -30,7 +30,6 @@ public class AuthController {
     @PostMapping("/login")
     @Operation(summary = "Login")
     public JwtResponse login(@RequestBody JwtRequest loginRequest) throws NotFoundUserOrAccountException {
-        System.out.println("dsfasd");
         return authService.login(loginRequest);
     }
 

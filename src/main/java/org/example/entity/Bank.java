@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.Set;
 
 @Entity(name = "bank")
-@Table
+@Table(indexes = @Index(columnList = "name"))
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
