@@ -1,17 +1,15 @@
 package org.example.security;
 
-import jakarta.persistence.Column;
 import lombok.Data;
 import org.example.entity.Role;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
 import java.util.Collection;
 import java.util.List;
 
 @Data
-public class JwtEntity implements UserDetails {
+public class UserDetailsImpl implements UserDetails {
 
     private String fio;
 

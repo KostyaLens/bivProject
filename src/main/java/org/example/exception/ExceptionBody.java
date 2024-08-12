@@ -2,7 +2,6 @@ package org.example.exception;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
-
 import java.util.Map;
 
 @Data

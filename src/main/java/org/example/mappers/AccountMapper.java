@@ -8,10 +8,8 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AccountMapper {
-
+    @Mapping(source = "bank.name", target = "bank")
     AccountDto toDto(Account account);
-
-    Account toEntity(AccountDto accountDTO);
 
     @Mapping(target = "bank", ignore = true)
     Account toEntity(CreateAccountDto createAccountDto);

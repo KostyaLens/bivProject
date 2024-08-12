@@ -3,7 +3,6 @@ package org.example.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-import org.example.dto.UserCreationDto;
 import org.example.dto.UserDto;
 import org.example.dto.UserUpdateDto;
 import org.example.entity.User;
@@ -11,7 +10,6 @@ import org.example.exception.NotFoundUserOrAccountException;
 import org.example.mappers.UserMapper;
 import org.example.security.AuthenticationFacade;
 import org.example.services.UserService;
-import org.springframework.data.domain.Page;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 

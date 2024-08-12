@@ -5,7 +5,6 @@ import org.example.dto.UserDto;
 import org.example.dto.UserUpdateDto;
 import org.example.entity.User;
 import org.mapstruct.Mapper;
-import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
 
@@ -17,8 +16,6 @@ public interface UserMapper {
     UserDto toDto(User user);
 
     List<UserDto> toDtoList(List<User> userList);
-
-    User toEntity(UserDto userDto);
     
     User toEntity(UserCreationDto userDto);
 

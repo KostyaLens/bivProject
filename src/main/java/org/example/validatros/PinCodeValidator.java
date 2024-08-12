@@ -3,6 +3,7 @@ import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
 public class PinCodeValidator implements ConstraintValidator<PinCode, String> {
+    private static final String PINCODE ="^\\d{4}$";
 
     @Override
     public void initialize(PinCode constraintAnnotation) {
@@ -11,6 +12,6 @@ public class PinCodeValidator implements ConstraintValidator<PinCode, String> {
 
     @Override
     public boolean isValid(String s, ConstraintValidatorContext constraintValidatorContext) {
-        return s.length() == 4;
+        return s.matches(PINCODE);
     }
 }

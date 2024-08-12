@@ -4,8 +4,8 @@ import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import org.example.entity.Bank;
 import org.example.validatros.PinCode;
+
 @Data
 @RequiredArgsConstructor
 @Schema(description = "Create account")
