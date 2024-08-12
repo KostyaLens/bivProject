@@ -6,6 +6,7 @@ import lombok.Data;
 @Data
 @Schema(description = "Account blocking")
 public class BlockAccountDto {
+
     @Schema(name = "username", example = "petrovich")
     private String username;
 }

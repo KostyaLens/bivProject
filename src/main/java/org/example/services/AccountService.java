@@ -25,7 +25,7 @@ public class AccountService {
     }
 
     @Transactional(readOnly = true)
-    public Account getAccountByUser(User user) throws NotFoundUserOrAccountException {
+    public Account getAccountByUser(User user){
         return accountRepository.findByUser(user);
     }
 

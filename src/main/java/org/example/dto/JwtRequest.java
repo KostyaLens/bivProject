@@ -6,8 +6,10 @@ import lombok.Data;
 @Data
 @Schema(description = "login")
 public class JwtRequest {
+
     @Schema(name = "username", example = "username")
     private String username;
+
     @Schema(name = "password", example = "Passw0rd")
     private String password;
 }

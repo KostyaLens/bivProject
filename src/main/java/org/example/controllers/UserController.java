@@ -7,12 +7,14 @@ import org.example.dto.UserDto;
 import org.example.dto.UserUpdateDto;
 import org.example.entity.User;
 import org.example.exception.NotFoundUserOrAccountException;
+import org.example.exception.SortingException;
 import org.example.mappers.UserMapper;
 import org.example.security.AuthenticationFacade;
 import org.example.services.UserService;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -52,9 +54,17 @@ public class UserController {
     @Operation(summary = "Administration method, get list all users")
     public List<UserDto> getAllUsers(@RequestParam int page,
                                   @RequestParam int count,
-                                  @RequestParam(defaultValue = "id", required = false) String sortingField,
-                                  @RequestParam(defaultValue = "ascending", required = false) String sortingDirection
-                                  ){
+                                  @RequestParam(required = false) List<String> sortingField,
+                                  @RequestParam(required = false) List<String> sortingDirection
+                                  ) throws SortingException {
+        if (sortingDirection == null){
+            sortingDirection = new ArrayList<>();
+            sortingDirection.add("ascending");
+        }
+        if (sortingField == null){
+            sortingField = new ArrayList<>();
+            sortingField.add("id");
+        }
         List<User> users = userService.getAllUsers(page, count, sortingField, sortingDirection).getContent();
         return userMapper.toDtoList(users);
     }

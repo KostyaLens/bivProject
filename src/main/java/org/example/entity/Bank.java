@@ -13,11 +13,14 @@ import java.util.Set;
 @NoArgsConstructor
 @Data
 public class Bank {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+
     @Column
     private String name;
+
     @OneToMany(mappedBy = "bank", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private Set<Account> accounts;
 }

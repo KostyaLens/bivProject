@@ -3,6 +3,7 @@ package org.example.controllers;
 import jakarta.persistence.NonUniqueResultException;
 import jakarta.validation.ConstraintViolationException;
 import org.example.exception.*;
+import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.validation.FieldError;
@@ -51,6 +52,12 @@ public class ControllerAdvice {
         return new ExceptionBody(e.getMessage());
     }
 
+    @ExceptionHandler(SortingException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerSortingException(SortingException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handleMethodArgumentNotValid(MethodArgumentNotValidException e) {
@@ -77,6 +84,14 @@ public class ControllerAdvice {
                 )));
         return exceptionBody;
     }
+
+    @ExceptionHandler(PropertyReferenceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerPropertyReferenceException(PropertyReferenceException e){
+        return new ExceptionBody("Сортировка по данному полю невозможна");
+    }
+
+
     @ExceptionHandler(Exception.class)
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ExceptionBody handleException(Exception e) {
