@@ -6,6 +6,7 @@ import jakarta.persistence.NonUniqueResultException;
 import jakarta.validation.constraints.NotEmpty;
 import org.example.dto.*;
 import org.example.entity.Account;
+import org.example.entity.Bank;
 import org.example.entity.User;
 import org.example.exception.NotEnoughFundsException;
 import org.example.exception.NotFoundBankException;
@@ -61,6 +62,9 @@ public class AccountController{
         account.setBank(bankService.getBankByName(createAccountDto.getBank()));
         account.setUser(user);
         accountService.createAccount(account);
+        user.setAccount(account);
+        userService.update(user);
+        bankService.getBankByName(account.getBank().getName()).getAccounts().add(account);
         return accountMapper.toDto(account);
     }
 
