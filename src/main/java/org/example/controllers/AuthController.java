@@ -29,7 +29,7 @@ public class AuthController {
 
     @PostMapping("/login")
     @Operation(summary = "Login")
-    public JwtResponse login(@RequestBody JwtRequest loginRequest) throws NotFoundUserOrAccountException {
+    public JwtResponse login(@RequestBody @Valid JwtRequest loginRequest) throws NotFoundUserOrAccountException {
         return authService.login(loginRequest);
     }
 

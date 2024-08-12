@@ -54,15 +54,12 @@ public class AccountController{
     public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto)
             throws NotFoundUserOrAccountException, NotFoundBankException {
         User user = userService.getByUsername(authenticationFacade.getCurrentUserName());
-        if (accountService.getAccountByUser(user) != null) {
+        if (accountService.getAccountByUser(user).isPresent()) {
             throw new NonUniqueResultException("У данного пользователя уже сущевствует аккаунт");
         }
         Account account = accountMapper.toEntity(createAccountDto);
-        account.setActive(true);
-        account.setBank(bankService.getBankByName(createAccountDto.getBank()));
-        account.setUser(user);
-        accountService.createAccount(account);
-        bankService.getBankByName(account.getBank().getName()).getAccounts().add(account);
+        Bank bank = bankService.getBankByName(createAccountDto.getBank());
+        accountService.createAccount(account, user, bank);
         return accountMapper.toDto(account);
     }
 
@@ -114,10 +111,6 @@ public class AccountController{
 
     private Account getAccount(String username) throws NotFoundUserOrAccountException {
         User user = userService.getByUsername(username);
-        Account account = accountService.getAccountByUser(user);
-        if (account == null){
-            throw new NotFoundUserOrAccountException("Не найденно аккаунта");
-        }
-        return account;
+        return accountService.getAccountByUser(user).orElseThrow(() -> new NotFoundUserOrAccountException("Не найденно аккаунта"));
     }
 }

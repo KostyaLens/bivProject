@@ -2,6 +2,7 @@ package org.example.dto;
 
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.example.validatros.PinCode;
@@ -20,6 +21,7 @@ public class CreateAccountDto {
     private String socialMediaStatus;
 
     @Schema(name = "bank", example = "Т-Банк")
+    @NotNull(message = "Не указан банк")
     private String bank;
 
 }

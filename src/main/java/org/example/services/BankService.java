@@ -13,7 +13,6 @@ import org.springframework.transaction.annotation.Transactional;
 public class BankService {
     private final BankRepository bankRepository;
 
-    @Transactional(readOnly = true)
     public Bank getBankByName(String name) throws NotFoundBankException {
         return bankRepository.findByName(name).orElseThrow(() -> new NotFoundBankException("Банк не найден"));
     }

@@ -11,6 +11,8 @@ import org.example.exception.NotFoundBankException;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.InternalAuthenticationServiceException;
+import org.springframework.security.authorization.AuthorizationDeniedException;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -60,6 +62,18 @@ public class ControllerAdvice {
     @ExceptionHandler(SortingException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerSortingException(SortingException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
+    @ExceptionHandler(InternalAuthenticationServiceException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerInternalAuthenticationServiceException(InternalAuthenticationServiceException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
+    @ExceptionHandler(AuthorizationDeniedException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ExceptionBody handlerAuthorizationDeniedException(AuthorizationDeniedException e){
         return new ExceptionBody(e.getMessage());
     }
 

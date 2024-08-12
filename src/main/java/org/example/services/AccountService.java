@@ -1,5 +1,6 @@
 package org.example.services;
 
+import org.example.entity.Bank;
 import org.example.exception.NotFoundUserOrAccountException;
 import org.example.exception.WrongPinCodeException;
 import org.springframework.transaction.annotation.Transactional;
@@ -10,6 +11,8 @@ import org.example.exception.NotEnoughFundsException;
 import org.example.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 
 @Service
 @Transactional(readOnly = true)
@@ -19,13 +22,17 @@ public class AccountService {
     private final AccountRepository accountRepository;
 
     @Transactional
-    public Account createAccount(Account account){
+    public Account createAccount(Account account, User user, Bank bank){
+        account.setActive(true);
+        account.setBank(bank);
+        account.setUser(user);
+        bank.getAccounts().add(account);
         accountRepository.save(account);
         return account;
     }
 
     @Transactional(readOnly = true)
-    public Account getAccountByUser(User user){
+    public Optional<Account> getAccountByUser(User user){
         return accountRepository.findByUser(user);
     }
 

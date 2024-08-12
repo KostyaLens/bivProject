@@ -30,7 +30,7 @@ public class JwtTokenFilter extends GenericFilterBean {
                 }
             }
         } catch (Exception e) {
-            throw new Exception("Произошёл сбой");
+
         }
         filterChain.doFilter(servletRequest, servletResponse);
     }

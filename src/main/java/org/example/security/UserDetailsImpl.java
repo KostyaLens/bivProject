@@ -11,13 +11,10 @@ import java.util.List;
 @Data
 public class UserDetailsImpl implements UserDetails {
 
-    private String fio;
-
-    private String email;
-
     private String username;
 
     private String password;
+
     private Role role;
 
     @Override

@@ -65,7 +65,7 @@ public class UserService {
 
     private void checkCorrectFieldSort(List<String> sortingField, List<String> sortingDirection) throws SortingException {
         for (String s : sortingField) {
-            if (s.equals("password")) {
+            if ("password".equals(s)) {
                 throw new SortingException("данному полю сортировка невозможна");
             }
         }
