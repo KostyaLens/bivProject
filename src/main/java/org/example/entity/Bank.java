@@ -30,6 +30,6 @@ public class Bank {
     @Column
     private String name;
 
-    @OneToMany(mappedBy = "bank", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
     private Set<Account> accounts;
 }

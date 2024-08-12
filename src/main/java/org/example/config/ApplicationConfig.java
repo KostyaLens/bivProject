@@ -49,7 +49,7 @@ public class ApplicationConfig {
         return new OpenAPI().addSecurityItem(new SecurityRequirement().addList("bearerAuth")).
                 components(new Components().addSecuritySchemes("bearerAuth", new SecurityScheme()
                         .type(SecurityScheme.Type.HTTP).scheme("bearer")
-                        .bearerFormat("JWT"))).info(new Info().title("Bank Made Manoilov Konstantin")
+                        .bearerFormat("JWT"))).info(new Info().title("Application made by Made Manoilov Konstantin")
                         .description("production by Deryagin Nickolay"));
     }
 
@@ -59,6 +59,7 @@ public class ApplicationConfig {
                 .csrf(AbstractHttpConfigurer::disable)
                 .cors(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
+
                 .sessionManagement(sessionManagement ->
                         sessionManagement
                                 .sessionCreationPolicy(
