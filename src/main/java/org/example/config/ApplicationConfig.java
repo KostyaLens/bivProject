@@ -9,13 +9,12 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.example.security.JwtTokenFilter;
 import org.example.security.JwtTokenProvider;
+import org.example.security.JwtUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Lazy;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -29,10 +28,12 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor(onConstructor = @__(@Lazy))
+@RequiredArgsConstructor()
 public class ApplicationConfig {
 
     private final JwtTokenProvider tokenProvider;
+
+    private final JwtUserDetailService jwtUserDetailService;
 
     @Bean
     public PasswordEncoder passwordEncoder(){
@@ -94,7 +95,7 @@ public class ApplicationConfig {
                                 .permitAll()
                                 .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
-                .addFilterBefore(new JwtTokenFilter(tokenProvider),
+                .addFilterBefore(new JwtTokenFilter(tokenProvider, jwtUserDetailService),
                         UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();

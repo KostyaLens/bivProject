@@ -1,7 +1,6 @@
 package org.example.services;
 
 import org.example.entity.Bank;
-import org.example.exception.NotFoundUserOrAccountException;
 import org.example.exception.WrongPinCodeException;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;

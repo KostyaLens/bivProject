@@ -13,6 +13,7 @@ import org.example.exception.NotFoundUserOrAccountException;
 import org.example.mappers.UserMapper;
 import org.example.services.AuthService;
 import org.example.services.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,6 +27,8 @@ public class AuthController {
     private final UserService userService;
     private final UserMapper userMapper;
     private final AuthService authService;
+    private final PasswordEncoder passwordEncoder;
+
 
     @PostMapping("/login")
     @Operation(summary = "Login")
@@ -37,6 +40,7 @@ public class AuthController {
     @Operation(summary = "Registration")
     public UserDto register(@Valid @RequestBody UserCreationDto userDto) {
         User user = userMapper.toEntity(userDto);
+        user.setPassword(passwordEncoder.encode(user.getPassword()));
         userService.save(user);
         return userMapper.toDto(user);
     }

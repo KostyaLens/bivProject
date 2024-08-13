@@ -24,4 +24,5 @@ public class JwtUserDetailService implements UserDetailsService {
         User user = userService.getByUsername(username);
         return jwtMapper.toJwt(user);
     }
+
 }
