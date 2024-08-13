@@ -67,8 +67,7 @@ public class ApplicationConfig {
                                 )
                 )
                 .authorizeHttpRequests(configurer ->
-                        configurer.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
-                                .permitAll()
+                        configurer.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**").permitAll()
                                 .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
