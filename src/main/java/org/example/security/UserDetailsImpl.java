@@ -11,6 +11,8 @@ import java.util.List;
 @Data
 public class UserDetailsImpl implements UserDetails {
 
+    private static final String START_FOR_USER_ROLE = "ROLE_";
+
     private String username;
 
     private String password;
@@ -19,7 +21,7 @@ public class UserDetailsImpl implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return  List.of(new SimpleGrantedAuthority("ROLE_" + role.name()));
+        return  List.of(new SimpleGrantedAuthority(START_FOR_USER_ROLE + role.name()));
     }
 
     @Override
