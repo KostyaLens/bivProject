@@ -12,7 +12,6 @@ import org.example.security.JwtTokenProvider;
 import org.example.security.JwtUserDetailService;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
@@ -28,7 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 @EnableMethodSecurity
-@RequiredArgsConstructor()
+@RequiredArgsConstructor
 public class ApplicationConfig {
 
     private final JwtTokenProvider tokenProvider;
@@ -67,32 +66,10 @@ public class ApplicationConfig {
                                         SessionCreationPolicy.STATELESS
                                 )
                 )
-                .exceptionHandling(configurer ->
-                        configurer.authenticationEntryPoint(
-                                        (request, response, exception) -> {
-                                            response.setStatus(
-                                                    HttpStatus.UNAUTHORIZED
-                                                            .value()
-                                            );
-                                            response.getWriter()
-                                                    .write("Не удалось авторицироваться");
-                                        })
-                                .accessDeniedHandler(
-                                        (request, response, exception) -> {
-                                            response.setStatus(
-                                                    HttpStatus.FORBIDDEN
-                                                            .value()
-                                            );
-                                            response.getWriter()
-                                                    .write("Не удалось авторицироваться");
-                                        }))
                 .authorizeHttpRequests(configurer ->
-                        configurer.requestMatchers("/auth/**")
+                        configurer.requestMatchers("/auth/**", "/swagger-ui/**", "/v3/api-docs/**")
                                 .permitAll()
-                                .requestMatchers("/swagger-ui/**")
-                                .permitAll()
-                                .requestMatchers("/v3/api-docs/**")
-                                .permitAll()
+                                .requestMatchers("/admin/**").hasRole("ADMIN")
                                 .anyRequest().authenticated())
                 .anonymous(AbstractHttpConfigurer::disable)
                 .addFilterBefore(new JwtTokenFilter(tokenProvider, jwtUserDetailService),

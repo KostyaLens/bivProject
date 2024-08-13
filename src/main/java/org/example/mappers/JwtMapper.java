@@ -8,6 +8,4 @@ import org.mapstruct.Mapper;
 public interface JwtMapper {
 
     UserDetailsImpl toJwt(User user);
-
-    User toEntity(UserDetailsImpl jwtEntity);
 }

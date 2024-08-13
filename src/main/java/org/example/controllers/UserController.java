@@ -53,25 +53,4 @@ public class UserController {
         userService.update(userMapper.updateUserFromDto(userDto, user));
         return user;
     }
-
-    @GetMapping("/list-users")
-    @PreAuthorize("hasRole('ROLE_ADMIN')")
-    @Operation(summary = "Administration method, get list all users")
-    public List<UserDto> getAllUsers(@RequestParam int page,
-                                  @RequestParam int count,
-                                  @RequestParam(required = false) List<String> sortingField,
-                                  @RequestParam(required = false) List<String> sortingDirection
-                                  ) throws SortingException {
-        if (sortingDirection == null){
-            sortingDirection = new ArrayList<>();
-            sortingDirection.add("ascending");
-        }
-        if (sortingField == null){
-            sortingField = new ArrayList<>();
-            sortingField.add("id");
-        }
-        List<User> users = userService.getAllUsers(page, count, sortingField, sortingDirection).getContent();
-        return userMapper.toDtoList(users);
-    }
-
 }

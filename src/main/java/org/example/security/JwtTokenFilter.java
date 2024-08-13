@@ -13,7 +13,6 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
 
-import java.io.IOException;
 
 @Component
 @AllArgsConstructor
@@ -23,11 +22,15 @@ public class JwtTokenFilter extends OncePerRequestFilter {
 
     private final JwtUserDetailService userDetailService;
 
+    private static final String AUTHORIZATION = "Authorization";
+
+    private static final String START_TOKEN = "Bearer ";
+
     @Override
     @SneakyThrows
     protected void doFilterInternal(HttpServletRequest servletRequest, HttpServletResponse servletResponse, FilterChain filterChain) {
-        String bearerToken = ((HttpServletRequest) servletRequest).getHeader("Authorization");
-        if (bearerToken != null && bearerToken.startsWith("Bearer ")) {
+        String bearerToken = ((HttpServletRequest) servletRequest).getHeader(AUTHORIZATION);
+        if (bearerToken != null && bearerToken.startsWith(START_TOKEN)) {
             bearerToken = bearerToken.substring(7);
         }
         try {
@@ -44,7 +47,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
     }
 
     private String getUsername(String token) {
-        return Jwts.parser().verifyWith(jwtTokenProvider.getKey()).build().parseSignedClaims(token).getPayload().getSubject();
+        return Jwts.parser().verifyWith(jwtTokenProvider.getSigningKey()).build().parseSignedClaims(token).getPayload().getSubject();
     }
 
     public Authentication getAuthentication(String token) {

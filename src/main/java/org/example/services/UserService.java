@@ -23,6 +23,9 @@ public class UserService {
 
     private final UserRepository userRepository;
 
+    private static final String DEFAULT_SORTING_DIRECTION = "ASC";
+
+    private static final String FORBIDDEN_SORT_FIELD = "password";
     @Transactional
     public void save(User user){
         userRepository.save(user);
@@ -48,7 +51,7 @@ public class UserService {
         checkCorrectFieldSort(sortingField, sortingDirection);
         Sort sort = Sort.by(IntStream.range(0, sortingField.size()).mapToObj(i -> {
             String direction = sortingDirection.size() == 1 ? sortingDirection.get(0) : sortingDirection.get(i);
-            return "ascending".equalsIgnoreCase(direction) ? Sort.Order.asc(sortingField.get(i)) :
+            return DEFAULT_SORTING_DIRECTION.equalsIgnoreCase(direction) ? Sort.Order.asc(sortingField.get(i)) :
                     Sort.Order.desc(sortingField.get(i));
         }).collect(Collectors.toList()));
 
@@ -62,7 +65,7 @@ public class UserService {
 
     private void checkCorrectFieldSort(List<String> sortingField, List<String> sortingDirection) throws SortingException {
         for (String s : sortingField) {
-            if ("password".equals(s)) {
+            if (FORBIDDEN_SORT_FIELD.equals(s)) {
                 throw new SortingException("данному полю сортировка невозможна");
             }
         }

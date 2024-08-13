@@ -8,8 +8,10 @@ import org.example.exception.SortingException;
 import org.example.exception.WrongPinCodeException;
 import org.example.exception.NotFoundUserOrAccountException;
 import org.example.exception.NotFoundBankException;
+import org.h2.security.auth.AuthenticationException;
 import org.springframework.data.mapping.PropertyReferenceException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.InternalAuthenticationServiceException;
 import org.springframework.security.authorization.AuthorizationDeniedException;
@@ -23,6 +25,7 @@ import java.util.stream.Collectors;
 
 @RestControllerAdvice
 public class ControllerAdvice {
+
     @ExceptionHandler(NotEnoughFundsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ExceptionBody handlerNotEnoughFunds(NotEnoughFundsException e){
@@ -71,9 +74,21 @@ public class ControllerAdvice {
         return new ExceptionBody(e.getMessage());
     }
 
+    @ExceptionHandler(AuthenticationException.class)
+    @ResponseStatus(HttpStatus.UNAUTHORIZED)
+    public ExceptionBody handlerAuthenticationException(AuthenticationException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
     @ExceptionHandler(AuthorizationDeniedException.class)
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
     public ExceptionBody handlerAuthorizationDeniedException(AuthorizationDeniedException e){
+        return new ExceptionBody(e.getMessage());
+    }
+
+    @ExceptionHandler(AccessDeniedException.class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    public ExceptionBody handlerAccessDeniedException(AccessDeniedException e){
         return new ExceptionBody(e.getMessage());
     }
 
