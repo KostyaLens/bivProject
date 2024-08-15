@@ -25,7 +25,7 @@ public class RequestAccountDto {
     @Min(value = 0, message = "Не удалось выполнить операцию, введена не коректаная сумма")
     private long amount;
 
-    @Schema(name = "bank", example = "Т-Банк")
+    @Schema(name = "bank", example = "Сбербанк")
     @NotEmpty(message = "Не указан банк")
     private String bank;
 }

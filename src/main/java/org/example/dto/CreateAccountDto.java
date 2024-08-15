@@ -20,8 +20,8 @@ public class CreateAccountDto {
     @Schema(name = "socialMediaStatus", example = "My little pony is cool")
     private String socialMediaStatus;
 
-//    @NotBankClient
-    @Schema(name = "bank", example = "Т-Банк")
+    @NotBankClient
+    @Schema(name = "bank", example = "Сбербанк")
     @NotEmpty(message = "Не указан банк")
     private String bank;
 

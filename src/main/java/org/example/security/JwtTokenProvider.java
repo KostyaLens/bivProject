@@ -8,7 +8,6 @@ import io.jsonwebtoken.security.Keys;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.Role;
-import org.example.properties.JwtProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import javax.crypto.SecretKey;
@@ -18,8 +17,6 @@ import java.util.Date;
 @Service
 @RequiredArgsConstructor
 public class JwtTokenProvider {
-
-    private final JwtProperties jwtProperties;
 
     private static final String KEY_FOR_USER_ID = "id";
 
@@ -32,6 +29,12 @@ public class JwtTokenProvider {
     @Value("${security.jwt.secret}")
     private String key;
 
+    @Value("${security.jwt.access}")
+    private long access;
+
+    @Value("${security.jwt.refresh}")
+    private long refresh;
+
     public SecretKey getSigningKey() {
         byte[] keyBytes = Decoders.BASE64.decode(getKey());
         return Keys.hmacShaKeyFor(keyBytes);
@@ -41,14 +44,14 @@ public class JwtTokenProvider {
         Claims claims = Jwts.claims().subject(username).add(KEY_FOR_USER_ID, userId).add(KEY_FOR_USER_FIO, fio)
                 .add(KEY_FOR_USER_ROLE, START_FOR_USER_ROLE + role.name()).build();
         Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
+        Date validity = new Date(now.getTime() + getAccess());
         return Jwts.builder().claims(claims).expiration(Date.from(validity.toInstant())).signWith(getSigningKey()).compact();
     }
 
     public String createRefreshToken(long userId, String username) {
         Claims claims = Jwts.claims().subject(username).add(KEY_FOR_USER_ID, userId).build();
         Date now = new Date();
-        Date validity = new Date(now.getTime() + jwtProperties.getAccess());
+        Date validity = new Date(now.getTime() + getAccess());
         return Jwts.builder().claims(claims).expiration(Date.from(validity.toInstant())).signWith(getSigningKey()).compact();
     }
 

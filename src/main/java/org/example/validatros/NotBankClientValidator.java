@@ -34,30 +34,12 @@ public class NotBankClientValidator implements ConstraintValidator<NotBankClient
     }
 
 
+    @SneakyThrows
     @Override
     public boolean isValid(String nameBank, ConstraintValidatorContext constraintValidatorContext) {
-//        Account account = null;
-//        String userName = authenticationFacade.getCurrentUserName();
-//        User user = null;
-//        try {
-//            user = userService.getByUsername(userName);
-//        } catch (NotFoundUserOrAccountException e) {
-//            throw new RuntimeException(e);
-//        }
-//        if (accountService.getAccountByUser(user).isPresent()) {
-//            try {
-//                account = accountService.getAccountByUser(user).orElseThrow(() -> new NotFoundUserOrAccountException("Не найденно аккаунта"));
-//            } catch (NotFoundUserOrAccountException e) {
-//                throw new RuntimeException(e);
-//            }
-//        }else {
-//            return true;
-//        }
-//        if(bankService.getBankByNameAndByAccount(nameBank, account).isEmpty()){
-//            System.out.println("red");
-//        }
-////        System.out.println(bankService.getBankByNameAndByAccount(nameBank, account).orElseThrow());
-//        return bankService.getBankByNameAndByAccount(nameBank, account).isEmpty();
-    return false;
+         String username = authenticationFacade.getCurrentUserName();
+         User user = userService.getByUsername(username);
+         Bank bank = bankService.getBankByName(nameBank);
+         return accountService.getAccountByUserAndBank(user, bank).isEmpty();
     }
 }

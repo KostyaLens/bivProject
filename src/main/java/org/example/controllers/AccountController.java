@@ -3,7 +3,7 @@ package org.example.controllers;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import jakarta.persistence.NonUniqueResultException;
+import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotEmpty;
 import org.example.dto.*;
 import org.example.entity.Account;
@@ -64,9 +64,6 @@ public class AccountController{
     public AccountDto createAccount(@Valid @RequestBody CreateAccountDto createAccountDto)
             throws NotFoundUserOrAccountException, NotFoundBankException {
         User user = userService.getByUsername(authenticationFacade.getCurrentUserName());
-//        if (accountService.getAccountByUser(user).isPresent()) {
-//            throw new NonUniqueResultException("У данного пользователя уже сущевствует аккаунт");
-//        }
         Account account = accountMapper.toEntity(createAccountDto);
         Bank bank = bankService.getBankByName(createAccountDto.getBank());
         bankService.save(bank, account);
@@ -84,10 +81,10 @@ public class AccountController{
         return accountMapper.toDto(account);
     }
 
-    @PutMapping("/deposit")
+    @PutMapping("/admin-assign-founds-to-account")
     @PreAuthorize("hasRole('ROLE_ADMIN')")
     @Operation(summary = "The method of replenishment of the account")
-     public ResponseEntity<String> deposit(@RequestBody @Valid RequestAccountDto requestAccountDto)
+     public ResponseEntity<String> depositAnyAccount(@RequestBody @Valid RequestAccountDto requestAccountDto)
             throws WrongPinCodeException, NotFoundUserOrAccountException, NotFoundBankException {
         Account recipient = getAccount(requestAccountDto.getRecipientUsername(), requestAccountDto.getBank());
         accountService.deposit(recipient, requestAccountDto.getAmount());
@@ -124,27 +121,48 @@ public class AccountController{
     }
 
 
+    @GetMapping("/info-amenities")
+    public List<ResponseBankAmenities> infoAmenities(@RequestParam @NotEmpty(message = "Введите название банка") String nameBank,
+                                                     @RequestParam @Min(value = 0, message = "Не указана страница") int page,
+                                                     @RequestParam @Min(value = 0, message = "Не указано количество элементов на странице") int count,
+                                                     @RequestParam @NotEmpty(message = "Не выбран тип услуги") String typeAmenities,
+                                                     @RequestParam(required = false) List<String> sortingDirection){
+        List<BankAmenities> bankAmenitiesList = bankAmenitiesService.
+                bankAmenitiesByTypeAndBankName(nameBank, page, count, typeAmenities, sortingDirection).getContent();
+        return bankAmenitiesMapper.toDtoList(bankAmenitiesList);
+    }
+
+    @PutMapping("/make-deposit")
+    public void makeDeposit(@RequestBody @Valid CreditDto creditDto)
+            throws NotFoundBankException, NotFoundUserOrAccountException, WrongPinCodeException, NotEnoughFundsException {
+        Account account = getAccount(authenticationFacade.getCurrentUserName(), creditDto.getNameBank());
+        if(account.getBalance() < creditDto.getAmount()){
+            throw new NotEnoughFundsException("Недостаточно средств");
+        }
+        accountService.makeDeposit(account, creditDto.getNameBank(), creditDto.getServiceNumber(), creditDto.getAmount(), creditDto.getPinCode());
+    }
+
+    @PutMapping("/take-the-credit")
+    public void takeCredit(@RequestBody @Valid CreditDto creditDto)
+            throws NotFoundBankException, NotFoundUserOrAccountException, WrongPinCodeException {
+        Account account = getAccount(authenticationFacade.getCurrentUserName(), creditDto.getNameBank());
+        accountService.issuingCredit(account, creditDto.getNameBank(), creditDto.getServiceNumber(), creditDto.getAmount(), creditDto.getPinCode());
+    }
+
+
+    @PutMapping("/repay-debt")
+    public void repayDebt(@RequestBody @Valid RepayDebtDto repayDebtDto)
+            throws NotFoundBankException, NotFoundUserOrAccountException, WrongPinCodeException {
+        Account account = getAccount(authenticationFacade.getCurrentUserName(), repayDebtDto.getNameBank());
+        accountService.repayDebt(account, repayDebtDto.getAmount(), repayDebtDto.getPinCode());
+    }
+
+
     private Account getAccount(String username, String bankName) throws NotFoundUserOrAccountException, NotFoundBankException {
         User user = userService.getByUsername(username);
         return accountService.getAccountByUserAndBank(user, bankService.getBankByName(bankName))
                 .orElseThrow(() -> new NotFoundUserOrAccountException("Не найденно аккаунта"));
     }
 
-    @GetMapping("/info-amenities")
-    public List<ResponseBankAmenities> infoAmenities(@RequestParam String nameBank,
-                           @RequestParam int page,
-                           @RequestParam int count,
-                           @RequestParam String typeAmenities,
-                           @RequestParam(required = false) List<String> sortingDirection){
-        List<BankAmenities> bankAmenitiesList = bankAmenitiesService.
-                bankAmenitiesByTypeAndBankName(nameBank, page, count, typeAmenities, sortingDirection).getContent();
-        return bankAmenitiesMapper.toDtoList(bankAmenitiesList);
-    }
-
-    @PutMapping("/take-the-credit")
-    public void takeCredit(@RequestBody @Valid CreditDto creditDto) throws NotFoundBankException, NotFoundUserOrAccountException, WrongPinCodeException {
-        Account account = getAccount(authenticationFacade.getCurrentUserName(), creditDto.getNameBank());
-        accountService.issuingCredit(account, creditDto.getNameBank(), creditDto.getServiceNumber(), creditDto.getAmount(), creditDto.getPinCode());
-    }
 
 }

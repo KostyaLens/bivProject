@@ -25,11 +25,11 @@ public class TransferDto {
     @Schema(name = "recipientUsername", example = "mather")
     private String recipientUsername;
 
-    @Schema(name = "recipientBank", example = "Т-Банк")
+    @Schema(name = "recipientBank", example = "Сбербанк")
     @NotEmpty(message = "Не указан банк")
     private String recipientBank;
 
-    @Schema(name = "senderBank", example = "Т-Банк")
+    @Schema(name = "senderBank", example = "Сбербанк")
     @NotEmpty(message = "Не указан банк")
     private String senderBank;
 }

@@ -23,6 +23,11 @@ public class BankService {
         bankRepository.save(bank);
     }
 
+    @Transactional
+    public void save(Bank bank){
+        bankRepository.save(bank);
+    }
+
     public Bank getBankByName(String name) throws NotFoundBankException {
         return bankRepository.findByName(name).orElseThrow(() -> new NotFoundBankException("Банк не найден"));
     }

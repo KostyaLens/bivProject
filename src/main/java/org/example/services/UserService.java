@@ -1,6 +1,7 @@
 package org.example.services;
 
 import lombok.RequiredArgsConstructor;
+import org.example.entity.TypeBankAmenities;
 import org.example.entity.User;
 import org.example.exception.NotFoundUserOrAccountException;
 import org.example.exception.SortingException;
@@ -72,5 +73,9 @@ public class UserService {
         if ((sortingDirection.size() > 1) && (sortingDirection.size() != sortingField.size())){
             throw new SortingException("Не соотвествие параметров, не понятно в какую сторону сортировать");
         }
+    }
+
+    public void getUsersOfBankingServices(int page, int count, TypeBankAmenities typeBankAmenities) {
+
     }
 }

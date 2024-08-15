@@ -14,9 +14,9 @@ import java.time.LocalDateTime;
 
 @Setter
 @Getter
-@Entity(name = "debtor")
+@Entity(name = "debtor_and_depositor")
 @RequiredArgsConstructor
-public class Debtor {
+public class DebtorAndDepositor {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
@@ -29,4 +29,7 @@ public class Debtor {
 
     @Column
     private long totalDebt;
+
+    @Column
+    private TypeBankAmenities type;
 }

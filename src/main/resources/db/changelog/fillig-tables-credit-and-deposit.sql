@@ -1,5 +1,5 @@
 insert into bank_amenities (name, percent, duration, bank_id, type, number)values
-('Потребительский кредит', 5, 36, 1, 'CREDIT', 1),
+('Потребительский кредит', 5, 1, 1, 'CREDIT', 1),
 ('Ипотечный кредит', 3, 240, 1, 'CREDIT', 2),
 ('Автокредит', 4, 60, 2, 'CREDIT', 1),
 ('Образовательный кредит', 6, 120, 3, 'CREDIT', 1),
@@ -22,7 +22,7 @@ insert into bank_amenities (name, percent, duration, bank_id, type, number)value
 
 insert into bank_amenities (name, percent, duration, bank_id, type, number) values
 ('Вклад Пенсионный', 3, 12, 1, 'DEPOSIT', 1),
-('Вклад Накопительный', 4, 24, 2, 'DEPOSIT', 1),
+('Вклад Накопительный', 4, 1, 2, 'DEPOSIT', 1),
 ('Вклад Срочный', 5, 36, 3, 'DEPOSIT', 1),
 ('Вклад Детский', 4, 18, 4, 'DEPOSIT', 1),
 ('Вклад Стандарт', 3, 12, 1, 'DEPOSIT', 2),

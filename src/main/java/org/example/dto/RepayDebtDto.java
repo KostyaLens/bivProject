@@ -11,23 +11,20 @@ import org.example.validatros.PinCode;
 @Getter
 @Setter
 @RequiredArgsConstructor
-@Schema(description = "creditDto")
-public class CreditDto {
+@Schema(description = "ServiceBankDto")
+public class RepayDebtDto {
 
     @Schema(name = "nameBank", example = "Сбербанк")
-    @NotEmpty(message = "Не указан банк")
+    @NotEmpty(message = "Не введенно название банка")
     private String nameBank;
 
-    @Min(value = 0, message = "нельзя брать в кредит отрицательные числа")
-    @Schema(name = "amount", example = "12")
+    @Schema(name = "amount", example = "100")
+    @Min(value = 0, message = "Не возможно вернуть такую сумму")
     private long amount;
 
-    @PinCode
-    @NotEmpty(message = "Не введён пин-код")
     @Schema(name = "pinCode", example = "1111")
+    @NotEmpty(message = "Введите пин-код")
+    @PinCode
     private String pinCode;
 
-    @Schema(name = "serviceNumber", example = "2")
-    @Min(value = 0, message = "Нет такого варинта")
-    private int serviceNumber;
 }

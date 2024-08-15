@@ -3,10 +3,10 @@ package org.example.services;
 import liquibase.exception.ServiceNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.example.entity.BankAmenities;
-import org.example.entity.Debtor;
+
 import org.example.entity.TypeBankAmenities;
 import org.example.entity.User;
-import org.example.mappers.DebtorMapper;
+
 import org.example.repository.BankAmenitiesRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -32,8 +32,8 @@ public class BankAmenitiesService {
         return bankAmenitiesRepository.findBankAmenitiesByTypeAndBankName(typeBankAmenities, nameBank, PageRequest.of(page, count));
     }
 
-    public BankAmenities getBankAmenitiesByNameBankAndServiceNumber(String nameBank, int serviceNumber) {
-        return bankAmenitiesRepository.findBankAmenitiesByTypeAndNumberAndNameBank(TypeBankAmenities.CREDIT, serviceNumber, nameBank)
+    public BankAmenities getBankAmenitiesByNameBankAndServiceNumber(String nameBank, int serviceNumber, TypeBankAmenities typeBankAmenities) {
+        return bankAmenitiesRepository.findBankAmenitiesByTypeAndNumberAndNameBank(typeBankAmenities, serviceNumber, nameBank)
                 .orElseThrow(() -> new ServiceNotFoundException("Услуга не найдена"));
     }
 }

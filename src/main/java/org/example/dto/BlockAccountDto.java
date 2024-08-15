@@ -12,7 +12,7 @@ public class BlockAccountDto {
     @NotEmpty
     private String username;
 
-    @Schema(name = "bank", example = "Т-Банк")
+    @Schema(name = "bank", example = "Сбербанк")
     @NotEmpty(message = "Не указан банк")
     private String bank;
 }
