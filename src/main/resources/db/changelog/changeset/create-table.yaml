@@ -16,6 +16,9 @@ databaseChangeLog:
               - column:
                   name: name
                   type: varchar(250)
+              - column:
+                  name: budget
+                  type: bigint
   - changeSet:
       id: create-account-table
       author: Konstantin Manoilov
@@ -48,12 +51,6 @@ databaseChangeLog:
               - column:
                   name: bank_id
                   type: bigint
-        - addForeignKeyConstraint:
-            baseTableName: account
-            baseColumnNames: bank_id
-            constraintName: fk_account_bank
-            referencedTableName: bank
-            referencedColumnNames: id
   - changeSet:
       id: create-table-user
       author: Konstantin Manoilov
@@ -90,18 +87,44 @@ databaseChangeLog:
                   name: role
                   type: varchar(255)
                   defaultValue: 'USER'
+  - changeSet:
+      id: create-table-type-of-credit
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: bank_amenities
+            columns:
               - column:
-                  name: account_id
+                  name: id
                   type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(250)
+              - column:
+                  name: percent
+                  type: int
+              - column:
+                  name: duration
+                  type: int
+              - column:
+                  name: bank_id
+                  type: bigint
+              - column:
+                  name: type
+                  type: varchar(255)
   - changeSet:
       id: add-foreign-key-user-account
       author: Konstantin Manoilov
       changes:
         - addForeignKeyConstraint:
-            baseTableName: users
-            baseColumnNames: account_id
-            constraintName: user_account_fk
-            referencedTableName: account
+            baseTableName: account
+            baseColumnNames: users_id
+            constraintName: fk_account_users
+            referencedTableName: users
             referencedColumnNames: id
   - changeSet:
       id: add-foreign-key-account-users
@@ -109,7 +132,17 @@ databaseChangeLog:
       changes:
         - addForeignKeyConstraint:
             baseTableName: account
-            baseColumnNames: users_id
-            constraintName: account_user_fk
-            referencedTableName: users
+            baseColumnNames: bank_id
+            constraintName: fk_account_bank
+            referencedTableName: bank
+            referencedColumnNames: id
+  - changeSet:
+      id: table-type-of-credit
+      author: Konstantin Manoilov
+      changes:
+         - addForeignKeyConstraint:
+            baseTableName: bank_amenities
+            baseColumnNames: bank_id
+            constraintName: fk_bank_amenities_bank_id
+            referencedTableName: bank
             referencedColumnNames: id

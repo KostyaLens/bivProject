@@ -9,9 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Index;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.Set;
 
@@ -19,7 +17,8 @@ import java.util.Set;
 @Table(indexes = @Index(columnList = "name"))
 @AllArgsConstructor
 @NoArgsConstructor
-@Data
+@Getter
+@Setter
 public class Bank {
 
     @Id
@@ -29,6 +28,12 @@ public class Bank {
     @Column
     private String name;
 
+    @Column
+    private long budget;
+
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
-    private Set<Account> accounts;
+    private Set<Account> account;
+
+    @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
+    private Set<BankAmenities> bankAmenities;
 }

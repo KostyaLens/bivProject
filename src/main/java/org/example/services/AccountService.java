@@ -25,21 +25,13 @@ public class AccountService {
         account.setActive(true);
         account.setBank(bank);
         account.setUser(user);
-        bank.getAccounts().add(account);
         accountRepository.save(account);
         return account;
     }
 
     @Transactional(readOnly = true)
-    public Optional<Account> getAccountByUser(User user){
-        return accountRepository.findByUser(user);
-    }
-
-    @Transactional
-    public void deposit(Account account, String pinCode, long amount) throws WrongPinCodeException {
-        checkPinCode(account, pinCode);
-        account.setBalance(account.getBalance() + amount);
-        accountRepository.save(account);
+    public Optional<Account> getAccountByUserAndBank(User user, Bank bank){
+        return accountRepository.findByUserAndBank(user, bank);
     }
 
     @Transactional

@@ -12,6 +12,10 @@ import org.example.validatros.PinCode;
 @Schema(description = "Request AccountDto")
 public class RequestAccountDto {
 
+    @NotEmpty(message = "Не введёно username получателя")
+    @Schema(name = "recipientUsername", example = "mather")
+    private String recipientUsername;
+
     @PinCode
     @NotEmpty(message = "Не введён пин-код")
     @Schema(name = "pinCode", example = "1111")
@@ -20,4 +24,8 @@ public class RequestAccountDto {
     @Schema(name = "amount", example = "100500")
     @Min(value = 0, message = "Не удалось выполнить операцию, введена не коректаная сумма")
     private long amount;
+
+    @Schema(name = "bank", example = "Т-Банк")
+    @NotEmpty(message = "Не указан банк")
+    private String bank;
 }

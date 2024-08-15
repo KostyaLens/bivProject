@@ -20,7 +20,7 @@
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
 
-        <!-- https://mvnrepository.com/artifact/org.postgresql/postgresql -->
+<!--&lt;!&ndash;         https://mvnrepository.com/artifact/org.postgresql/postgresql&ndash;&gt;-->
 <!--        <dependency>-->
 <!--            <groupId>org.postgresql</groupId>-->
 <!--            <artifactId>postgresql</artifactId>-->
@@ -179,3 +179,4 @@
         </plugins>
     </build>
 </project>
+

@@ -24,4 +24,12 @@ public class TransferDto {
     @NotEmpty(message = "Не введёно username получателя")
     @Schema(name = "recipientUsername", example = "mather")
     private String recipientUsername;
+
+    @Schema(name = "recipientBank", example = "Т-Банк")
+    @NotEmpty(message = "Не указан банк")
+    private String recipientBank;
+
+    @Schema(name = "senderBank", example = "Т-Банк")
+    @NotEmpty(message = "Не указан банк")
+    private String senderBank;
 }

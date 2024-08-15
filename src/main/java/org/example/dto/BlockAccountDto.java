@@ -11,4 +11,8 @@ public class BlockAccountDto {
     @Schema(name = "username", example = "petrovich")
     @NotEmpty
     private String username;
+
+    @Schema(name = "bank", example = "Т-Банк")
+    @NotEmpty(message = "Не указан банк")
+    private String bank;
 }

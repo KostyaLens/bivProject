@@ -7,4 +7,5 @@ databaseChangeLog:
       file: db/changelog/changeset/completionDB.yaml
   - include:
       file: db/changelog/changeset/create-bank.yaml
-
+  - include:
+      file: db/changelog/changeset/fillig-tables-credit-and-deposit.yaml

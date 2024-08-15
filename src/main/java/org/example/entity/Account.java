@@ -10,12 +10,11 @@ import jakarta.persistence.OneToOne;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.FetchType;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Table
-@Data
+@Getter
+@Setter
 @Entity(name = "account")
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,7 +35,7 @@ public class Account {
     @Column
     private long balance;
 
-    @OneToOne
+    @ManyToOne
     @JoinColumn(name = "users_id")
     private User user;
 
