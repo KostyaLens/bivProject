@@ -116,6 +116,49 @@ databaseChangeLog:
               - column:
                   name: type
                   type: varchar(255)
+              - column:
+                  name: number
+                  type: int
+  - changeSet:
+      id: create-table-debtor
+      author: Manoilov Konstantin
+      changes:
+        - createTable:
+            tableName: debtor
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_deadline
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_debt
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+
+  - changeSet:
+      id: add-foreign-key-debtor-account
+      author: Manoilov Konstantin
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: debtor
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: id
+            constraintName: fk_debtor_account
   - changeSet:
       id: add-foreign-key-user-account
       author: Konstantin Manoilov

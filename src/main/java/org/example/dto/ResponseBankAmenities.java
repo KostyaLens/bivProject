@@ -14,4 +14,6 @@ public class ResponseBankAmenities {
     private String percent;
 
     private int duration;
+
+    private int serviceNumber;
 }

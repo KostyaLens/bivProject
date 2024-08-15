@@ -1,15 +1,15 @@
 package org.example.services;
 
-import org.example.entity.Bank;
+import org.example.entity.*;
 import org.example.exception.WrongPinCodeException;
+import org.example.mappers.DebtorMapper;
 import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
-import org.example.entity.Account;
-import org.example.entity.User;
 import org.example.exception.NotEnoughFundsException;
 import org.example.repository.AccountRepository;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 
@@ -19,6 +19,12 @@ import java.util.Optional;
 public class AccountService {
 
     private final AccountRepository accountRepository;
+
+    private final BankAmenitiesService bankAmenitiesService;
+
+    private final DebtorMapper debtorMapper;
+
+    private final DebtorService debtorService;
 
     @Transactional
     public Account createAccount(Account account, User user, Bank bank){
@@ -65,5 +71,17 @@ public class AccountService {
         if (!pinCode.equals(account.getPinCode())){
             throw new WrongPinCodeException("Неверный пин-код");
         }
+    }
+
+    @Transactional
+    public void issuingCredit(Account account, String nameBank, int serviceNumber, long amount, String pinCode) throws WrongPinCodeException {
+        checkPinCode(account, pinCode);
+        BankAmenities bankAmenities = bankAmenitiesService.getBankAmenitiesByNameBankAndServiceNumber(nameBank, serviceNumber);
+        deposit(account, amount);
+        Debtor debtor = debtorMapper.toDebtor(account, bankAmenities);
+        long debt = amount + amount*bankAmenities.getPercent();
+        debtor.setTotalDebt(debt);
+        debtorService.save(debtor);
+        System.out.println(debtor);
     }
 }

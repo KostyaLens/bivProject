@@ -29,7 +29,7 @@ public class Bank {
     private String name;
 
     @Column
-    private long budget;
+    private long budget = 10000000;
 
     @OneToMany(mappedBy = "bank", cascade = CascadeType.ALL)
     private Set<Account> account;

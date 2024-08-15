@@ -108,7 +108,7 @@ public class AccountController{
     public ResponseEntity<String> transfer(@RequestBody @Valid TransferDto transferDto)
             throws NotEnoughFundsException, WrongPinCodeException, NotFoundUserOrAccountException, NotFoundBankException {
         Account sender = getAccount(authenticationFacade.getCurrentUserName(), transferDto.getSenderBank());
-        Account recipient = getAccount(transferDto.getRecipientUsername(), transferDto.getRecipientUsername());
+        Account recipient = getAccount(transferDto.getRecipientUsername(), transferDto.getRecipientBank());
         accountService.transfer(sender, recipient, transferDto.getPinCode(), transferDto.getAmount());
         return ResponseEntity.ok("Перевод выполнен");
     }
@@ -142,8 +142,9 @@ public class AccountController{
     }
 
     @PutMapping("/take-the-credit")
-    public void takeCredit(@RequestBody CreditDto creditDto){
-
+    public void takeCredit(@RequestBody @Valid CreditDto creditDto) throws NotFoundBankException, NotFoundUserOrAccountException, WrongPinCodeException {
+        Account account = getAccount(authenticationFacade.getCurrentUserName(), creditDto.getNameBank());
+        accountService.issuingCredit(account, creditDto.getNameBank(), creditDto.getServiceNumber(), creditDto.getAmount(), creditDto.getPinCode());
     }
 
 }

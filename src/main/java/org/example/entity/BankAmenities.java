@@ -18,7 +18,7 @@ public class BankAmenities {
     private String name;
 
     @Column
-    private String percent;
+    private int percent;
 
     @Column
     private int duration;
@@ -29,4 +29,7 @@ public class BankAmenities {
 
     @Enumerated(EnumType.STRING)
     private TypeBankAmenities type;
+
+    @Column
+    private int number;
 }

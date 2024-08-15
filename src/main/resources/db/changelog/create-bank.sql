@@ -1,4 +1,4 @@
-insert into bank (name) values ('Сбербанк');
-insert into bank (name) values ('Т-Банк');
-insert into bank (name) values ('Альфа-Банк');
-insert into bank (name) values ('ВТБ');
+insert into bank (name, budget) values ('Сбербанк', 10000000);
+insert into bank (name, budget) values ('Т-Банк', 10000000);
+insert into bank (name, budget) values ('Альфа-Банк', 10000000);
+insert into bank (name, budget) values ('ВТБ', 10000000);
