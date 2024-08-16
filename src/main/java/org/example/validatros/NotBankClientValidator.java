@@ -3,11 +3,8 @@ package org.example.validatros;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 import lombok.SneakyThrows;
-import org.example.entity.Account;
 import org.example.entity.Bank;
 import org.example.entity.User;
-import org.example.exception.NotFoundUserOrAccountException;
-import org.example.repository.UserRepository;
 import org.example.security.AuthenticationFacade;
 import org.example.services.AccountService;
 import org.example.services.BankService;
@@ -37,9 +34,9 @@ public class NotBankClientValidator implements ConstraintValidator<NotBankClient
     @SneakyThrows
     @Override
     public boolean isValid(String nameBank, ConstraintValidatorContext constraintValidatorContext) {
-         String username = authenticationFacade.getCurrentUserName();
-         User user = userService.getByUsername(username);
-         Bank bank = bankService.getBankByName(nameBank);
-         return accountService.getAccountByUserAndBank(user, bank).isEmpty();
+        String username = authenticationFacade.getCurrentUserName();
+        User user = userService.getByUsername(username);
+        Bank bank = bankService.getBankByName(nameBank);
+        return accountService.getAccountByUserAndBank(user, bank).isEmpty();
     }
 }

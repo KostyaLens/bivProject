@@ -7,9 +7,7 @@ import org.example.exception.NotFoundBankException;
 import org.example.repository.BankRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
 import java.util.Optional;
-import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
@@ -18,13 +16,13 @@ public class BankService {
     private final BankRepository bankRepository;
 
     @Transactional
-    public void save(Bank bank, Account account){
+    public void save(Bank bank, Account account) {
         bank.getAccount().add(account);
         bankRepository.save(bank);
     }
 
     @Transactional
-    public void save(Bank bank){
+    public void save(Bank bank) {
         bankRepository.save(bank);
     }
 
@@ -33,7 +31,7 @@ public class BankService {
     }
 
 
-    public Optional<Bank> getBankByNameAndByAccount(String nameBank, Account account){
+    public Optional<Bank> getBankByNameAndByAccount(String nameBank, Account account) {
         return bankRepository.findByNameAndAccount(nameBank, account);
     }
 

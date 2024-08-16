@@ -1,14 +1,11 @@
 package org.example.dto;
 
-import lombok.Getter;
+import lombok.Data;
 import lombok.RequiredArgsConstructor;
-import lombok.Setter;
-import org.hibernate.annotations.SecondaryRow;
 
 import java.time.LocalDateTime;
 
-@Setter
-@Getter
+@Data
 @RequiredArgsConstructor
 public class UserBankServiceDto {
 
@@ -17,4 +14,6 @@ public class UserBankServiceDto {
     private long amount;
 
     private LocalDateTime deadline;
+
+    private String bank;
 }

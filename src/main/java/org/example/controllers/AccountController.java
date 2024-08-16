@@ -35,7 +35,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-
 import java.util.List;
 
 @Validated
@@ -125,10 +124,9 @@ public class AccountController{
     public List<ResponseBankAmenities> infoAmenities(@RequestParam @NotEmpty(message = "Введите название банка") String nameBank,
                                                      @RequestParam @Min(value = 0, message = "Не указана страница") int page,
                                                      @RequestParam @Min(value = 0, message = "Не указано количество элементов на странице") int count,
-                                                     @RequestParam @NotEmpty(message = "Не выбран тип услуги") String typeAmenities,
-                                                     @RequestParam(required = false) List<String> sortingDirection){
+                                                     @RequestParam @NotEmpty(message = "Не выбран тип услуги") String typeAmenities){
         List<BankAmenities> bankAmenitiesList = bankAmenitiesService.
-                bankAmenitiesByTypeAndBankName(nameBank, page, count, typeAmenities, sortingDirection).getContent();
+                bankAmenitiesByTypeAndBankName(nameBank, page, count, typeAmenities).getContent();
         return bankAmenitiesMapper.toDtoList(bankAmenitiesList);
     }
 
