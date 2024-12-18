@@ -1,0 +1,8 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-admin
+      author: Konstantin Manoilov
+      changes:
+        - sqlFile:
+            path: db/changelog/create-bank.sql
+            relativeToChangelogFile: false

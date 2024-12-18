@@ -1,0 +1,193 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-table-bank
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: bank
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(250)
+              - column:
+                  name: budget
+                  type: bigint
+  - changeSet:
+      id: create-account-table
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: account
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: balance
+                  type: bigint
+              - column:
+                  name: is_active
+                  type: boolean
+              - column:
+                  name: pin_code
+                  type: varchar(200)
+              - column:
+                  name: social_media_status
+                  type: varchar(200)
+              - column:
+                  name: users_id
+                  type: bigint
+              - column:
+                  name: bank_id
+                  type: bigint
+  - changeSet:
+      id: create-table-user
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: users
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: username
+                  type: varchar(250)
+              - column:
+                  name: email
+                  type: varchar(250)
+              - column:
+                  name: password
+                  type: varchar(250)
+              - column:
+                  name: fio
+                  type: varchar(250)
+              - column:
+                  name: created_date
+                  type: timestamp
+              - column:
+                  name: last_modified_date
+                  type: timestamp
+              - column:
+                  name: role
+                  type: varchar(255)
+                  defaultValue: 'USER'
+  - changeSet:
+      id: create-table-type-of-credit
+      author: Konstantin Manoilov
+      changes:
+        - createTable:
+            tableName: bank_amenities
+            columns:
+              - column:
+                  name: id
+                  type: bigint
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: name
+                  type: varchar(250)
+              - column:
+                  name: percent
+                  type: int
+              - column:
+                  name: duration
+                  type: int
+              - column:
+                  name: bank_id
+                  type: bigint
+              - column:
+                  name: type
+                  type: varchar(255)
+              - column:
+                  name: number
+                  type: int
+  - changeSet:
+      id: create-table-debtor_and_depositor
+      author: Manoilov Konstantin
+      changes:
+        - createTable:
+            tableName: debtor_and_depositor
+            columns:
+              - column:
+                  name: id
+                  type: BIGINT
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: account_id
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: payment_deadline
+                  type: TIMESTAMP
+                  constraints:
+                    nullable: false
+              - column:
+                  name: total_debt
+                  type: BIGINT
+                  constraints:
+                    nullable: false
+              - column:
+                  name: type
+                  type: varchar(255)
+  - changeSet:
+      id: add-foreign-key-debtor-account
+      author: Manoilov Konstantin
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: debtor_and_depositor
+            baseColumnNames: account_id
+            referencedTableName: account
+            referencedColumnNames: id
+            constraintName: fk_debtor_and_depositor_account
+  - changeSet:
+      id: add-foreign-key-user-account
+      author: Konstantin Manoilov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: users_id
+            constraintName: fk_account_users
+            referencedTableName: users
+            referencedColumnNames: id
+  - changeSet:
+      id: add-foreign-key-account-users
+      author: Konstantin Manoilov
+      changes:
+        - addForeignKeyConstraint:
+            baseTableName: account
+            baseColumnNames: bank_id
+            constraintName: fk_account_bank
+            referencedTableName: bank
+            referencedColumnNames: id
+  - changeSet:
+      id: table-type-of-credit
+      author: Konstantin Manoilov
+      changes:
+         - addForeignKeyConstraint:
+            baseTableName: bank_amenities
+            baseColumnNames: bank_id
+            constraintName: fk_bank_amenities_bank_id
+            referencedTableName: bank
+            referencedColumnNames: id

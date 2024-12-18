@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - include:
+      file: db/changelog/changeset/create-table.yaml
+  - include:
+      file: db/changelog/changeset/create-admin.yaml
+  - include:
+      file: db/changelog/changeset/completionDB.yaml
+  - include:
+      file: db/changelog/changeset/create-bank.yaml
+  - include:
+      file: db/changelog/changeset/fillig-tables-credit-and-deposit.yaml
